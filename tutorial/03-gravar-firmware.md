@@ -22,7 +22,7 @@ No GitHub: **Code → Download ZIP**, e **descompacte** o ZIP. Não abra o arqui
 
 ## 3.3 Configurar e gravar
 
-1. **Ferramentas → Placa → esp32 → ESP32 Dev Module**.
+1. **Ferramentas → Placa → esp32 → ESP32 Dev Module** (ou **DOIT ESP32 DEVKIT V1**, se for essa a sua placa: as duas funcionam).
 2. **Ferramentas → Porta** → a porta COM do ESP32. Se o menu estiver cinza, veja o
    [driver USB](02-arduino-ide.md#23-driver-usb-se-a-porta-não-aparecer).
 3. **✓ Verificar**: deve terminar com algo como `Sketch uses 1023507 bytes (78%)`.

@@ -21,6 +21,10 @@ sob comando do ESP32. Cada L298N controla 2 motores, por isso são 2 módulos.
 A Ponte H 1 usa pinos de um lado da placa ESP32 e a Ponte H 2 do outro lado, então os fios
 ficam retos. Em placas diferentes a posição física muda, mas os **números impressos** são os mesmos.
 
+> **ESP32 DevKit V1 (30 pinos):** todos esses pinos existem nela, impressos com "D" na frente
+> (D32, D33, D25, D26, D23, D22, D19, D18). O GND do lado esquerdo fica perto do **VIN**, e não
+> entre o 12 e o 13 como no desenho de 38 pinos. Siga sempre os nomes impressos na placa.
+
 ## Passo a passo (os números batem com o desenho)
 
 1. **Sinais:** 8 jumpers fêmea‑fêmea dos pinos do ESP32 até os pinos IN das pontes H.

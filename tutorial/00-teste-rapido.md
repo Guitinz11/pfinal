@@ -6,6 +6,9 @@ Use esta montagem para **validar o código** quando você só tem **1 ponte H L2
 O código é **o mesmo da garra completa, sem nenhuma mudança**: a ponte H é ligada exatamente
 como a "Ponte H 1" da montagem final.
 
+O desenho é da **ESP32 DevKit V1 (30 pinos)**, onde os pinos vêm impressos com "D" na frente
+(D32, D33…). Na Arduino IDE, escolha a placa **DOIT ESP32 DEVKIT V1** ou **ESP32 Dev Module**: as duas funcionam.
+
 ![Teste com 1 ponte H L298N e 2 motores: pinos 32, 33, 25 e 26 do ESP32 nas entradas IN1 a IN4, motores nos bornes OUT, fonte e GND do ESP32 nos bornes de alimentação](../docs/img/teste-1-ponte-h.png)
 
 ## O que você precisa
@@ -26,11 +29,11 @@ Não precisa de protoboard: o fio − da fonte e o jumper do GND do ESP32 vão j
 
 | ESP32 | L298N |
 |---|---|
-| 32 | IN1 |
-| 33 | IN2 |
-| 25 | IN3 |
-| 26 | IN4 |
-| GND | borne GND (junto com o − da fonte) |
+| D32 | IN1 |
+| D33 | IN2 |
+| D25 | IN3 |
+| D26 | IN4 |
+| GND (o que fica ao lado do VIN) | borne GND (junto com o − da fonte) |
 
 | Motor / fonte | Borne do L298N |
 |---|---|
