@@ -26,11 +26,12 @@ então são necessários **2 módulos**.
 |----------|---------|-----------|-------------|--------------------|
 | Base     | 1       | IN1 / IN2 | 32 / 33     | Esquerda / Direita |
 | Ombro    | 1       | IN3 / IN4 | 25 / 26     | Desce / Sobe       |
-| Cotovelo | 2       | IN1 / IN2 | 27 / 14     | Recolhe / Estica   |
-| Garra    | 2       | IN3 / IN4 | 18 / 19     | Abre / Fecha       |
+| Cotovelo | 2       | IN1 / IN2 | 23 / 22     | Recolhe / Estica   |
+| Garra    | 2       | IN3 / IN4 | 19 / 18     | Abre / Fecha       |
 
 Motor 1 de cada ponte nos bornes **OUT1/OUT2**, motor 2 nos bornes **OUT3/OUT4**.
-Tudo configurável em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/config.h).
+A Ponte H 1 usa pinos do lado esquerdo da placa ESP32 e a Ponte H 2 do lado direito.
+Tudo configurável no início de [`firmware/garra_esp32/garra_esp32.ino`](firmware/garra_esp32/garra_esp32.ino), na seção CONFIGURAÇÃO.
 
 ## Ligação
 
@@ -40,10 +41,10 @@ Tudo configurável em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/con
  33 ─────────────────── IN2      OUT1/OUT2 → motor Base
  25 ─────────────────── IN3      OUT3/OUT4 → motor Ombro
  26 ─────────────────── IN4
- 27 ───────────────────────────────────────────── IN1
- 14 ───────────────────────────────────────────── IN2   OUT1/OUT2 → motor Cotovelo
- 18 ───────────────────────────────────────────── IN3   OUT3/OUT4 → motor Garra
- 19 ───────────────────────────────────────────── IN4
+ 23 ───────────────────────────────────────────── IN1
+ 22 ───────────────────────────────────────────── IN2   OUT1/OUT2 → motor Cotovelo
+ 19 ───────────────────────────────────────────── IN3   OUT3/OUT4 → motor Garra
+ 18 ───────────────────────────────────────────── IN4
  GND ────────────────── GND ───────────────────── GND   ← OBRIGATÓRIO (GND comum)
 
  FONTE (+) ──────────── +12V/VCC ──────────────── +12V/VCC
@@ -58,7 +59,7 @@ Tudo configurável em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/con
   amarelo (TT) de 3–6 V use fonte de **7–9 V**. Não ligue nada no pino "5V" dele.
 - **L9110S / TB6612:** quase não perdem tensão, use fonte de **5–6 V**.
 - Se um motor girar ao contrário do botão, inverta os 2 fios dele no borne OUT ou mude
-  `invertido` para `true` no `config.h`.
+  `invertido` para `true` na seção CONFIGURAÇÃO do `.ino`.
 
 ## Parte mecânica: motor DC empurrando a seringa
 
@@ -99,7 +100,7 @@ pio run -t upload && pio device monitor
 - O motor só gira enquanto o botão está apertado. Se o celular parar de mandar o comando
   (botão solto, Wi-Fi caiu, tela bloqueada), o motor para em 0,4 s.
 - Se o botão ficar apertado por mais de 6 s seguidos, o motor para e só volta depois de soltar.
-  Isso protege o fim de curso da seringa. Ajuste `TEMPO_MAX_MS` no `config.h`.
+  Isso protege o fim de curso da seringa. Ajuste `TEMPO_MAX_MS` na seção CONFIGURAÇÃO do `.ino`.
 - Partida suave (rampa), para não dar tranco na hidráulica.
 
 Como o motor DC não sabe a própria posição, **é você quem para antes do fim da seringa**.
