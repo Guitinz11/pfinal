@@ -49,16 +49,18 @@ const char PAGINA_HTML[] PROGMEM = R"rawliteral(
 </div>
 
 <script>
-let ws, estado = null, arrastando = {}, pend = {}, timer = null;
+let estado = null, arrastando = {}, pend = {}, timer = null;
 const $ = id => document.getElementById(id);
 
-function conectar() {
-  ws = new WebSocket(`ws://${location.host}/ws`);
-  ws.onopen  = () => { $('st').textContent = 'conectado'; $('st').classList.add('on'); };
-  ws.onclose = () => { $('st').textContent = 'desconectado'; $('st').classList.remove('on'); setTimeout(conectar, 1000); };
-  ws.onmessage = e => atualizar(JSON.parse(e.data));
+function online(ok) {
+  $('st').textContent = ok ? 'conectado' : 'desconectado';
+  $('st').classList.toggle('on', ok);
 }
-function enviar(m) { if (ws && ws.readyState === 1) ws.send(m); }
+function enviar(m) {
+  return fetch('/cmd?c=' + encodeURIComponent(m), { cache: 'no-store' })
+    .then(r => r.json()).then(s => { online(true); atualizar(s); })
+    .catch(() => online(false));
+}
 
 // Agrupa envios (no máx. a cada 50 ms) para não afogar o ESP32
 function agendar(chave, msg) {
@@ -102,8 +104,8 @@ function atualizar(s) {
 $('stop').onclick = () => enviar('x');
 $('home').onclick = () => enviar('h');
 $('vel').oninput  = () => { $('vv').textContent = $('vel').value + '°/s'; agendar('v', 'v,' + $('vel').value); };
-setInterval(() => enviar('p'), 1000);   // "estou vivo" para o timeout de segurança
-conectar();
+setInterval(() => enviar('p'), 1000);   // "estou vivo" + sincroniza com outros celulares
+enviar('p');
 </script>
 </body>
 </html>

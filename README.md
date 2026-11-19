@@ -2,10 +2,11 @@
 
 Garra movida por **8 seringas com água** (4 pares mestre → escrava) e **4 servos**,
 controlada pelo celular através da rede Wi-Fi criada pelo próprio ESP32.
+Usa só o que já vem com o suporte ao ESP32: **nenhuma biblioteca extra**.
 Não precisa de app nem de internet: qualquer navegador funciona.
 
 ```
-[Celular] --Wi-Fi "Garra-ESP"--> [ESP32: página web + WebSocket]
+[Celular] --Wi-Fi "Garra-ESP"--> [ESP32: página web]
                                         │ PWM
                                   [4 servos]  ← fonte externa 5–6 V
                                         │ empurram
@@ -81,12 +82,10 @@ A seringa empurra em linha reta, então é preciso converter esse movimento em g
 
 ## Gravando o firmware
 
-**Arduino IDE**
-1. Instale o suporte ao ESP32 (Gerenciador de Placas → "esp32" da Espressif).
-2. Gerenciador de Bibliotecas → instale:
-   - `ESP Async WebServer` (ESP32Async)
-   - `Async TCP` (ESP32Async)
-   - `ESP32Servo` (Kevin Harrington)
+**Arduino IDE** (não precisa instalar nenhuma biblioteca)
+1. Em Preferências, adicione a URL de placas
+   `https://espressif.github.io/arduino-esp32/package_esp32_index.json`.
+2. Gerenciador de Placas → instale **esp32** (Espressif Systems).
 3. Abra `firmware/garra_esp32/garra_esp32.ino`, placa **ESP32 Dev Module**, e envie.
 
 **PlatformIO**
@@ -126,7 +125,7 @@ estourar a mangueira).
 
 ## Protocolo (se quiser fazer outro controle/app)
 
-WebSocket em `ws://192.168.4.1/ws`, mensagens de texto:
+Requisição HTTP `GET http://192.168.4.1/cmd?c=<comando>`:
 
 | Mensagem      | Efeito                                   |
 |---------------|------------------------------------------|
@@ -136,7 +135,7 @@ WebSocket em `ws://192.168.4.1/ws`, mensagens de texto:
 | `h`           | HOME                                     |
 | `p`           | ping (enviar a cada ~1 s)                |
 
-O ESP32 responde com JSON:
+Toda resposta é um JSON com o estado:
 `{"v":60,"p":false,"j":[{"n":"Base","min":10,"max":170,"a":90}, ...]}`
 
 ## Trocando servo por outro motor
