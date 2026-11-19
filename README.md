@@ -18,10 +18,10 @@ Não precisa de app nem de internet: qualquer navegador funciona.
 
 | # | Junta    | GPIO | O que faz            |
 |---|----------|------|----------------------|
-| 0 | Base     | 13   | gira o braço         |
-| 1 | Ombro    | 14   | sobe/desce o braço   |
-| 2 | Cotovelo | 27   | estica/recolhe       |
-| 3 | Garra    | 26   | abre/fecha           |
+| 0 | Base     | 14   | gira o braço         |
+| 1 | Ombro    | 27   | sobe/desce o braço   |
+| 2 | Cotovelo | 26   | estica/recolhe       |
+| 3 | Garra    | 25   | abre/fecha           |
 
 Nomes, pinos e limites ficam em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/config.h).
 
@@ -48,6 +48,15 @@ A seringa empurra em linha reta, então é preciso converter esse movimento em g
 
 ## Ligação elétrica
 
+**Montagem recomendada: protoboard, sem emendar fios.**
+- Em cada servo, 2 jumpers macho-macho levam o marrom para a trilha **−** e o vermelho para a trilha **+**.
+- 1 jumper macho-fêmea leva o laranja direto ao pino do ESP32 (14, 27, 26 e 25, que ficam lado a lado).
+- 1 jumper macho-fêmea liga o GND do ESP32 à trilha −.
+- O capacitor e os fios da fonte são espetados direto nas trilhas.
+
+O esquema elétrico equivalente é este:
+
+
 ```
  FONTE 5–6 V (≥ 3 A)                     ESP32
    (+) ──┬──────────── VCC (fio vermelho) dos 4 servos
@@ -57,10 +66,10 @@ A seringa empurra em linha reta, então é preciso converter esse movimento em g
    (−) ──┴──────────── GND (fio marrom) dos 4 servos ──── GND do ESP32   ← OBRIGATÓRIO
 
  Sinal (fio laranja/amarelo):
-   Servo Base     → GPIO 13
-   Servo Ombro    → GPIO 14
-   Servo Cotovelo → GPIO 27
-   Servo Garra    → GPIO 26
+   Servo Base     → GPIO 14
+   Servo Ombro    → GPIO 27
+   Servo Cotovelo → GPIO 26
+   Servo Garra    → GPIO 25
 
  ESP32 alimentado pelo USB (ou pelo pino 5V/VIN a partir de um regulador).
 ```

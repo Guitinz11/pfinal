@@ -17,6 +17,7 @@
 //              para que o motor NUNCA force o êmbolo até o fim do curso.
 // inicial    : posição ao ligar e ao apertar "Home".
 // invertido  : true se o movimento ficou ao contrário do slider.
+// Pinos 25, 26, 27 e 14 ficam lado a lado na placa ESP32 DevKit.
 struct Junta {
   const char* nome;
   uint8_t     pino;
@@ -30,10 +31,10 @@ struct Junta {
 
 static const Junta JUNTAS[NUM_JUNTAS] = {
   // nome        pino  min  max  inicial invertido
-  { "Base",       13,   10, 170,  90,    false },
-  { "Ombro",      14,   30, 150,  90,    false },
-  { "Cotovelo",   27,   30, 150,  90,    false },
-  { "Garra",      26,   40, 140,  90,    false },
+  { "Base",       14,   10, 170,  90,    false },
+  { "Ombro",      27,   30, 150,  90,    false },
+  { "Cotovelo",   26,   30, 150,  90,    false },
+  { "Garra",      25,   40, 140,  90,    false },
 };
 
 // ---------- Movimento ----------
