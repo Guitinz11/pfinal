@@ -1,93 +1,77 @@
-# Garra hidráulica controlada pelo celular (ESP32)
+# Garra hidráulica controlada pelo celular (ESP32 + motores DC)
 
-Garra movida por **8 seringas com água** (4 pares mestre → escrava) e **4 servos**,
-controlada pelo celular através da rede Wi-Fi criada pelo próprio ESP32.
-Usa só o que já vem com o suporte ao ESP32: **nenhuma biblioteca extra**.
-Não precisa de app nem de internet: qualquer navegador funciona.
+Garra movida por **8 seringas com água** (4 pares mestre → escrava) e **4 motores DC**
+com **2 pontes H**, controlada pelo celular através da rede Wi-Fi criada pelo próprio ESP32.
+Não precisa de app nem de internet, e o código **não usa nenhuma biblioteca extra**.
 
 ```
 [Celular] --Wi-Fi "Garra-ESP"--> [ESP32: página web]
-                                        │ PWM
-                                  [4 servos]  ← fonte externa 5–6 V
-                                        │ empurram
+                                        │ 8 fios de sinal (IN1..IN4 x2)
+                              [2 pontes H]  ← fonte externa
+                                        │
+                                  [4 motores DC]
+                                        │ empurram/puxam
                               seringa MESTRE ──mangueira c/ água──► seringa ESCRAVA
-                                                                    (move a junta)
 ```
 
-## Juntas (1 servo + 1 par de seringas cada)
+## Por que ponte H?
 
-| # | Junta    | GPIO | O que faz            |
-|---|----------|------|----------------------|
-| 0 | Base     | 14   | gira o braço         |
-| 1 | Ombro    | 27   | sobe/desce o braço   |
-| 2 | Cotovelo | 26   | estica/recolhe       |
-| 3 | Garra    | 25   | abre/fecha           |
+O motor DC só muda de sentido quando o + e o − dele são invertidos. A ponte H faz essa
+inversão sob comando do ESP32. Cada módulo comum (L298N, L9110S, TB6612) controla **2 motores**,
+então são necessários **2 módulos**.
 
-Nomes, pinos e limites ficam em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/config.h).
+## Motores e pinos
 
-### Base giratória (junta 0)
+| Motor    | Ponte H | Entradas  | Pinos ESP32 | Botões no celular  |
+|----------|---------|-----------|-------------|--------------------|
+| Base     | 1       | IN1 / IN2 | 32 / 33     | Esquerda / Direita |
+| Ombro    | 1       | IN3 / IN4 | 25 / 26     | Desce / Sobe       |
+| Cotovelo | 2       | IN1 / IN2 | 27 / 14     | Recolhe / Estica   |
+| Garra    | 2       | IN3 / IN4 | 18 / 19     | Abre / Fecha       |
 
-A seringa empurra em linha reta, então é preciso converter esse movimento em giro:
+Motor 1 de cada ponte nos bornes **OUT1/OUT2**, motor 2 nos bornes **OUT3/OUT4**.
+Tudo configurável em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/config.h).
 
-```
-        vista de cima
-     ┌───────────────┐
-     │   ( base  )   │   seringa ESCRAVA presa na parte FIXA,
-     │   (   •   )───┼── ponta do êmbolo presa num pino
-     │   ( gira  )   │   fora do centro do disco (alavanca)
-     └───────────────┘
-```
-
-- **Alavanca (mais simples):** o êmbolo empurra um pino a uns 3–5 cm do centro.
-  Dá cerca de **90–120° de giro**. Use um pino/parafuso solto (articulado) nas duas
-  pontas da seringa, porque o ângulo muda durante o giro.
-- **Cremalheira/polia (mais giro):** o êmbolo puxa um fio enrolado numa polia
-  (ou move uma cremalheira numa engrenagem) e você ganha **até ~180°**, mas a força é menor.
-- Apoie o disco num **rolamento de mesa giratória ("lazy susan")** ou num rolamento
-  grande, para o peso do braço não travar o giro.
-
-## Ligação elétrica
-
-**Montagem recomendada: protoboard, sem emendar fios.**
-- Em cada servo, 2 jumpers macho-macho levam o marrom para a trilha **−** e o vermelho para a trilha **+**.
-- 1 jumper macho-fêmea leva o laranja direto ao pino do ESP32 (14, 27, 26 e 25, que ficam lado a lado).
-- 1 jumper macho-fêmea liga o GND do ESP32 à trilha −.
-- O capacitor e os fios da fonte são espetados direto nas trilhas.
-
-O esquema elétrico equivalente é este:
-
+## Ligação
 
 ```
- FONTE 5–6 V (≥ 3 A)                     ESP32
-   (+) ──┬──────────── VCC (fio vermelho) dos 4 servos
-         │
-        [C] 1000 µF (perna + no +)
-         │
-   (−) ──┴──────────── GND (fio marrom) dos 4 servos ──── GND do ESP32   ← OBRIGATÓRIO
+ ESP32                  PONTE H 1                 PONTE H 2
+ 32 ─────────────────── IN1                       
+ 33 ─────────────────── IN2      OUT1/OUT2 → motor Base
+ 25 ─────────────────── IN3      OUT3/OUT4 → motor Ombro
+ 26 ─────────────────── IN4
+ 27 ───────────────────────────────────────────── IN1
+ 14 ───────────────────────────────────────────── IN2   OUT1/OUT2 → motor Cotovelo
+ 18 ───────────────────────────────────────────── IN3   OUT3/OUT4 → motor Garra
+ 19 ───────────────────────────────────────────── IN4
+ GND ────────────────── GND ───────────────────── GND   ← OBRIGATÓRIO (GND comum)
 
- Sinal (fio laranja/amarelo):
-   Servo Base     → GPIO 14
-   Servo Ombro    → GPIO 27
-   Servo Cotovelo → GPIO 26
-   Servo Garra    → GPIO 25
-
- ESP32 alimentado pelo USB (ou pelo pino 5V/VIN a partir de um regulador).
+ FONTE (+) ──────────── +12V/VCC ──────────────── +12V/VCC
+ FONTE (−) ──────────── GND ───────────────────── GND
+ ESP32 alimentado pelo USB.
 ```
 
-- **Nunca** alimente os servos pelo 3V3/5V do ESP32 — ele reinicia ou queima.
-- O **GND tem que ser comum** entre fonte e ESP32, senão o sinal não funciona.
-- 4 × MG996R podem puxar mais de 2 A juntos quando forçam: use fonte de 3 A ou mais.
+- Os pinos IN são machos: use **jumpers fêmea-fêmea** do ESP32 até a ponte H.
+- Os bornes (+12V, GND, OUT) são de parafuso: só encaixar o fio e apertar. Para levar a fonte
+  às duas pontes, use a trilha da protoboard ou coloque 2 fios no mesmo borne.
+- **L298N:** deixe os jumpers **ENA** e **ENB** no lugar. Ele "perde" uns 2 V, então para motor
+  amarelo (TT) de 3–6 V use fonte de **7–9 V**. Não ligue nada no pino "5V" dele.
+- **L9110S / TB6612:** quase não perdem tensão, use fonte de **5–6 V**.
+- Se um motor girar ao contrário do botão, inverta os 2 fios dele no borne OUT ou mude
+  `invertido` para `true` no `config.h`.
 
-## Montagem hidráulica
+## Parte mecânica: motor DC empurrando a seringa
 
-1. Encha mangueira e seringas **debaixo d'água** para não sobrar bolha de ar
-   (ar = garra "mole" e imprecisa).
-2. Deixe a seringa mestre com o êmbolo **no meio do curso** e a escrava também,
-   assim a junta consegue ir para os dois lados a partir da posição inicial (90°).
-3. Prenda bem as seringas mestre (abraçadeira/suporte) — se elas se moverem,
-   o servo empurra a seringa inteira em vez do êmbolo.
-4. Mestre **menor** que a escrava = mais força, menos curso. Iguais = 1:1.
-5. Deixe a eletrônica acima e afastada da água.
+O motor precisa ter **caixa de redução** (o motor amarelo de carrinho já tem). Para transformar
+o giro em empurra/puxa:
+
+- **Manivela (mais simples):** um braço preso no eixo do motor e uma haste até o êmbolo.
+  Girar para um lado empurra, girar para o outro puxa. Use menos de meia volta.
+- **Barra roscada (mais força):** o motor gira uma barra roscada e uma porca presa ao êmbolo
+  anda para frente e para trás. É lenta, mas segura a posição sozinha quando o motor para.
+
+Em todos os casos o **êmbolo precisa estar preso** (furo + parafuso ou arame), senão ele só
+empurra e a junta não volta.
 
 ## Gravando o firmware
 
@@ -106,50 +90,32 @@ pio run -t upload && pio device monitor
 
 1. No celular, conecte na rede **Garra-ESP** (senha `garra1234`).
 2. Abra **http://192.168.4.1**.
-3. Use os sliders (ou −/+ para ajuste fino) para mover cada junta.
-   - **PARAR**: congela tudo na posição atual.
-   - **Home**: volta todas as juntas para a posição inicial.
-   - **Velocidade**: mais devagar = menos tranco na hidráulica.
-
-Vários celulares podem se conectar ao mesmo tempo; todos ficam sincronizados.
-
-## Calibração (faça antes de usar pra valer!)
-
-Com a hidráulica montada, para cada junta:
-1. Mova devagar o slider até o êmbolo **quase** chegar no fim da seringa
-   (escrava ou mestre, o que acontecer primeiro). Anote o ângulo.
-2. Faça o mesmo para o outro lado.
-3. Coloque esses valores (com ~5° de folga) em `min` e `max` no `config.h`.
-4. Se a junta se mexe ao contrário do slider, mude `invertido` para `true`.
-
-Assim o servo nunca força contra o fim de curso (o que esquenta o motor e pode
-estourar a mangueira).
+3. **Segure** um botão para mover o motor e **solte** para parar. Dá para segurar dois ao mesmo tempo.
+   - **PARAR TUDO**: para todos os motores na hora.
+   - **Velocidade**: força dos motores, em %.
 
 ## Segurança embutida
 
-- Limites mínimo/máximo por junta (o ESP32 ignora valores fora da faixa).
-- Movimento em velocidade constante (sem trancos).
-- Se o celular desconectar ou parar de responder por 3 s **durante** um movimento,
-  a garra congela onde está.
+- O motor só gira enquanto o botão está apertado. Se o celular parar de mandar o comando
+  (botão solto, Wi-Fi caiu, tela bloqueada), o motor para em 0,4 s.
+- Se o botão ficar apertado por mais de 6 s seguidos, o motor para e só volta depois de soltar.
+  Isso protege o fim de curso da seringa. Ajuste `TEMPO_MAX_MS` no `config.h`.
+- Partida suave (rampa), para não dar tranco na hidráulica.
 
-## Protocolo (se quiser fazer outro controle/app)
+Como o motor DC não sabe a própria posição, **é você quem para antes do fim da seringa**.
+Para ficar automático, dá para adicionar chaves de fim de curso (microswitch) depois.
 
-Requisição HTTP `GET http://192.168.4.1/cmd?c=<comando>`:
+## Protocolo (se quiser fazer outro controle)
 
-| Mensagem      | Efeito                                   |
-|---------------|------------------------------------------|
-| `s,<j>,<g>`   | junta `j` vai para `g` graus             |
-| `v,<g/s>`     | velocidade em graus por segundo          |
-| `x`           | PARAR                                    |
-| `h`           | HOME                                     |
-| `p`           | ping (enviar a cada ~1 s)                |
+`GET http://192.168.4.1/cmd?c=<comandos>` (vários separados por `;`):
 
-Toda resposta é um JSON com o estado:
-`{"v":60,"p":false,"j":[{"n":"Base","min":10,"max":170,"a":90}, ...]}`
+| Comando       | Efeito                                         |
+|---------------|------------------------------------------------|
+| `m,<j>,1`     | motor `j` no sentido do botão da direita       |
+| `m,<j>,-1`    | motor `j` no sentido do botão da esquerda      |
+| `m,<j>,0`     | para o motor `j`                               |
+| `v,<30-100>`  | velocidade em %                                |
+| `x`           | PARAR tudo                                     |
+| `p`           | ping                                           |
 
-## Trocando servo por outro motor
-
-Se os servos não tiverem força para as seringas, a alternativa é **motor de passo
-(28BYJ-48 + ULN2003 ou NEMA17 + A4988) empurrando o êmbolo com barra roscada**.
-Só a função `escreverServo()` e o `setup()` do `.ino` precisam mudar; a página e o
-protocolo continuam iguais.
+Enquanto o motor deve girar, o comando `m` precisa ser repetido a cada ~150 ms.
