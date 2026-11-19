@@ -77,6 +77,19 @@ segunda ponte H com os outros 2 motores ([capítulo 4](04-ligacao-eletrica.md)).
 
 ## Se algo não funcionar
 
+**Primeiro, descubra se o problema é na montagem ou no app.** Grave o programa
+[`firmware/teste_motores/teste_motores.ino`](../firmware/teste_motores/teste_motores.ino). Ele não usa
+Wi‑Fi nem app: só gira o Motor 1 e o Motor 2 para um lado e para o outro, sem parar.
+
+| Com o programa de teste | Significa |
+|---|---|
+| Os motores giram | A montagem está certa. O problema é no app ou no código principal |
+| O LED azul da placa pisca, mas os motores não giram | Problema na ligação ou na fonte (veja a tabela abaixo) |
+| O LED azul não pisca | O ESP32 não está ligado ou o programa não foi gravado |
+
+Depois do teste, grave de novo o `garra_esp32.ino`.
+
+
 | Sintoma | Verifique |
 |---|---|
 | Nenhum motor gira | Jumpers ENA/ENB no lugar? Fonte ligada no +12V e GND? |
