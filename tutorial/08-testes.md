@@ -2,6 +2,8 @@
 
 [← App do celular](07-app-celular.md) · [Índice](../README.md) · [Próximo: problemas comuns →](09-problemas.md)
 
+> Só tem 1 ponte H e 2 motores? Use o [teste rápido](00-teste-rapido.md) para validar o código primeiro.
+
 Monte e teste **uma etapa por vez**. Só avance quando a atual funcionar. Assim, quando algo
 der errado, você sabe exatamente onde está o problema.
 

@@ -13,6 +13,13 @@ sem biblioteca extra e sem emendar fios.
 Celular → Wi-Fi → ESP32 → Ponte H → Motor DC → Manivela → Seringa mestre → água → Seringa escrava → Junta
 ```
 
+## Só tem 1 ponte H e 2 motores?
+
+Comece pelo **[teste rápido](tutorial/00-teste-rapido.md)**: valida o código com metade das peças,
+sem mudar nada no programa.
+
+<p align="center"><img src="docs/img/teste-1-ponte-h.png" alt="Teste com 1 ponte H L298N e 2 motores" width="640"></p>
+
 ## Tutorial passo a passo
 
 | # | Capítulo | O que você faz |
@@ -45,7 +52,7 @@ Celular → Wi-Fi → ESP32 → Ponte H → Motor DC → Manivela → Seringa me
 
 ```
 ├── README.md                     ← você está aqui
-├── tutorial/                     ← os 10 capítulos
+├── tutorial/                     ← teste rápido + 10 capítulos
 ├── firmware/garra_esp32/
 │   └── garra_esp32.ino           ← código completo (configuração + app + programa)
 ├── docs/
