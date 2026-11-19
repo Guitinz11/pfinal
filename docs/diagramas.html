@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ligações da Garra</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: uma coluna de leitura; diagramas em painéis que rolam na horizontal no celular */
+:root {
+  --bg:#f3f6f5; --panel:#ffffff; --fg:#17201d; --muted:#596762; --line:#d5ddda;
+  --accent:#0e7a66;
+  --board:#1d5e50; --board-fg:#eaf6f2; --chip:#2a2f33; --pin:#c9a64a;
+  --part:#e8eeec; --part-stroke:#97a6a1;
+  --vcc:#d63838; --gnd:#3a3230; --sig:#e0870f; --wifi:#0e7a66;
+  --water:#2f86d0; --water-fill:#cfe4f6;
+  --psu:#fff1d2; --psu-stroke:#c4952a;
+  --warn-bg:#fff4e0; --warn-fg:#7a4b00;
+  --mdf:#efe6d6; --mdf-stroke:#c8b796; --wood:#e3c28e; --wood-stroke:#a67d45; --metal:#a3adb2;
+  --bb:#f7f7f4; --bb-edge:#cfd2cc; --bb-hole:#3d4440; --rail-neg:#2f6fd6; --rail-pos:#d63838;
+  --w-red:#e03b3b; --w-brown:#8a5a3c; --w-black:#2b2b2b; --w-orange:#f08c1a; --wire-edge:#ffffff;
+  --servo:#2c3a4f; --servo-fg:#e8eef6; --conn:#232323; --cap:#1f3f8f; --cap-stripe:#c9d6f2;
+  --copper:#c97a3d; --copper-dark:#8f4f1f; --on-accent:#ffffff;
+  --l298:#b3262e; --l298-fg:#fff4f0; --hs:#1d1f22; --hs-fin:#5b6168; --term:#2a63c9; --term-dark:#173a7a;
+  --tt:#f3c531; --tt-edge:#9c7a0e; --tt-fg:#3a2c00;
+  --j-or:#f08c1a; --j-ye:#d9b300; --j-gr:#2a9d57; --j-bl:#2f7fe0;
+  --sans:"IBM Plex Sans", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+  --display:"Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg:#0f1513; --panel:#161e1b; --fg:#e3ebe8; --muted:#95a39e; --line:#28342f;
+  --accent:#3cc4a8; --part:#1e2825; --part-stroke:#4f605a;
+  --vcc:#ff6b6b; --gnd:#cfc3bc; --sig:#f4a63c; --wifi:#3cc4a8;
+  --water:#5aaef0; --water-fill:#173149; --psu:#2a2414; --psu-stroke:#a8822c;
+  --warn-bg:#2b2112; --warn-fg:#f3c77a; --mdf:#2a2620; --mdf-stroke:#51483a; --wood:#8a6a3d; --wood-stroke:#c99d5e; --metal:#6c787e; --bb:#2a2e2b; --bb-edge:#454b47; --bb-hole:#0d0f0e; --rail-neg:#6aa1ff; --rail-pos:#ff6b6b; --w-red:#ff5c5c; --w-brown:#b07a55; --w-black:#9aa09c; --w-orange:#ffa53d; --wire-edge:#161e1b; --servo:#3a4b66; --conn:#0b0b0b; --cap:#3d63c9; --cap-stripe:#d8e2fa; --on-accent:#0f1513; --l298:#a3242b; --hs:#0f1012; --hs-fin:#7c838b; --term:#3a72d8; --tt:#e2b829; --tt-edge:#f1d77a; --j-or:#ffa53d; --j-ye:#f2d23c; --j-gr:#3fc274; --j-bl:#5da0ff; color-scheme:dark;
+} }
+:root[data-theme="dark"] {
+  --bg:#0f1513; --panel:#161e1b; --fg:#e3ebe8; --muted:#95a39e; --line:#28342f;
+  --accent:#3cc4a8; --part:#1e2825; --part-stroke:#4f605a;
+  --vcc:#ff6b6b; --gnd:#cfc3bc; --sig:#f4a63c; --wifi:#3cc4a8;
+  --water:#5aaef0; --water-fill:#173149; --psu:#2a2414; --psu-stroke:#a8822c;
+  --warn-bg:#2b2112; --warn-fg:#f3c77a; --mdf:#2a2620; --mdf-stroke:#51483a; --wood:#8a6a3d; --wood-stroke:#c99d5e; --metal:#6c787e; --bb:#2a2e2b; --bb-edge:#454b47; --bb-hole:#0d0f0e; --rail-neg:#6aa1ff; --rail-pos:#ff6b6b; --w-red:#ff5c5c; --w-brown:#b07a55; --w-black:#9aa09c; --w-orange:#ffa53d; --wire-edge:#161e1b; --servo:#3a4b66; --conn:#0b0b0b; --cap:#3d63c9; --cap-stripe:#d8e2fa; --on-accent:#0f1513; --l298:#a3242b; --hs:#0f1012; --hs-fin:#7c838b; --term:#3a72d8; --tt:#e2b829; --tt-edge:#f1d77a; --j-or:#ffa53d; --j-ye:#f2d23c; --j-gr:#3fc274; --j-bl:#5da0ff; color-scheme:dark;
+}
+body { background:var(--bg); color:var(--fg); font:16px/1.55 var(--sans); }
+.wrap { max-width:1040px; margin:0 auto; padding-block:28px 56px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:28px; }
+h1 { font:700 clamp(26px,4vw,36px)/1.15 var(--display); margin:0; text-wrap:balance; }
+h2 { font:600 21px/1.25 var(--display); margin:0; text-wrap:balance; }
+.lead { color:var(--muted); margin:6px 0 0; max-width:65ch; }
+section { display:flex; flex-direction:column; gap:12px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow-x:auto; padding:12px; }
+.panel svg { display:block; width:100%; min-width:760px; height:auto; }
+.legend { display:flex; flex-wrap:wrap; gap:8px 22px; font-size:14px; color:var(--muted); }
+.legend span { display:inline-flex; align-items:center; gap:8px; }
+.sw { width:26px; height:4px; border-radius:2px; display:inline-block; }
+table { border-collapse:collapse; width:100%; font-size:15px; }
+th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:600; }
+td code, li code { font-family:var(--mono); font-size:.92em; }
+.tbl { overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-radius:12px; }
+.checks { margin:0; padding:14px 18px 14px 38px; background:var(--warn-bg); color:var(--warn-fg); border-radius:12px; display:flex; flex-direction:column; gap:6px; }
+.note { font-size:14px; color:var(--muted); margin:0; }
+
+/* SVG */
+.part { fill:var(--part); stroke:var(--part-stroke); stroke-width:1.5; }
+.board { fill:var(--board); }
+.chip { fill:var(--chip); }
+.psu { fill:var(--psu); stroke:var(--psu-stroke); stroke-width:1.5; }
+.t { fill:var(--fg); font:500 14px var(--sans); }
+.ts { fill:var(--muted); font:400 12.5px var(--sans); }
+.tbig { fill:var(--fg); font:600 16px var(--sans); }
+.tb { fill:var(--board-fg); font:500 13px var(--mono); }
+.tbt { fill:var(--board-fg); font:600 15px var(--sans); }
+.m { font-family:var(--mono); }
+.w { fill:none; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
+.vcc { stroke:var(--vcc); } .gnd { stroke:var(--gnd); } .sig { stroke:var(--sig); }
+.wifi { fill:none; stroke:var(--wifi); stroke-width:2; stroke-dasharray:6 6; }
+.dv { fill:var(--vcc); } .dg { fill:var(--gnd); } .ds { fill:var(--sig); }
+.pin { fill:var(--pin); }
+.cap { fill:none; stroke:var(--fg); stroke-width:3; }
+.water { fill:var(--water-fill); }
+.tube { fill:none; stroke:var(--water); stroke-width:8; stroke-linecap:round; }
+.barrel { fill:none; stroke:var(--part-stroke); stroke-width:2; }
+.rod { fill:none; stroke:var(--fg); stroke-width:4; stroke-linecap:round; }
+.head { fill:var(--fg); }
+.arrow { fill:none; stroke:var(--accent); stroke-width:2.5; }
+.arrowhead { fill:var(--accent); }
+.joint { fill:var(--part); stroke:var(--accent); stroke-width:2.5; }
+.mdf { fill:var(--mdf); stroke:var(--mdf-stroke); stroke-width:1.5; }
+.wood { fill:var(--wood); }
+.metal { fill:var(--metal); }
+.wo { stroke:var(--wood-stroke); stroke-linecap:round; }
+.wi { stroke:var(--wood); stroke-linecap:round; }
+.jaw { fill:none; stroke:var(--wood-stroke); stroke-width:8; stroke-linecap:round; stroke-linejoin:round; }
+.link { stroke:var(--fg); stroke-width:3; stroke-linecap:round; }
+.ground { stroke:var(--muted); stroke-width:1.5; stroke-dasharray:2 5; }
+.leader { stroke:var(--muted); stroke-width:1; }
+.tube2 { fill:none; stroke:var(--water); stroke-width:4; stroke-linecap:round; opacity:.85; }
+.sy-out { stroke:var(--part-stroke); stroke-width:16; }
+.sy-in { stroke:var(--water-fill); stroke-width:11; }
+.sy-noz { stroke:var(--part-stroke); stroke-width:6; }
+.sy-rod { stroke:var(--fg); stroke-width:3.5; stroke-linecap:round; }
+.sy-head { stroke:var(--fg); stroke-width:4; }
+.pv { fill:var(--panel); stroke:var(--fg); stroke-width:2; }
+.duo { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap:28px; }
+.duo .panel svg { min-width:420px; }
+.bb { fill:var(--bb); stroke:var(--bb-edge); stroke-width:1.5; }
+.bb-ch { fill:var(--bb-edge); opacity:.5; }
+.hole { fill:var(--bb-hole); }
+.rail-neg { stroke:var(--rail-neg); stroke-width:2; }
+.rail-pos { stroke:var(--rail-pos); stroke-width:2; }
+.rl-neg { fill:var(--rail-neg); font:700 15px var(--sans); }
+.rl-pos { fill:var(--rail-pos); font:700 15px var(--sans); }
+.wedge { fill:none; stroke:var(--wire-edge); stroke-width:7.5; stroke-linecap:round; stroke-linejoin:round; }
+.wire { fill:none; stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round; }
+.tip { fill:var(--metal); stroke:var(--wire-edge); stroke-width:2; }
+.cu { fill:var(--copper); stroke:var(--wire-edge); stroke-width:2; }
+.pin-off { fill:var(--pin); opacity:.45; }
+.pl { fill:var(--board-fg); font:500 12px var(--mono); opacity:.55; }
+.pl-on { fill:var(--board-fg); font:600 13px var(--mono); }
+.sv { fill:var(--servo); }
+.sv-ear { fill:var(--servo); opacity:.8; }
+.sv-horn { fill:var(--panel); stroke:var(--servo-fg); stroke-width:2; }
+.tsv { fill:var(--servo-fg); font:600 14px var(--sans); }
+.sv + .sv-horn + .tsv + .ts { fill:var(--servo-fg); }
+.conn { fill:var(--conn); }
+.jh { fill:var(--conn); }
+.leg { stroke:var(--metal); stroke-width:2.5; }
+.capbody { fill:var(--cap); }
+.capstripe { fill:var(--cap-stripe); }
+.capmark { fill:var(--cap); font:700 14px var(--sans); }
+.badge circle { fill:var(--accent); stroke:var(--panel); stroke-width:2.5; }
+.badge text { fill:var(--on-accent); font:700 13px var(--sans); }
+.steps { margin:0; padding:0 0 0 0; list-style:none; counter-reset:s; display:flex; flex-direction:column; gap:10px; max-width:75ch; }
+.steps li { counter-increment:s; display:grid; grid-template-columns:28px 1fr; gap:12px; align-items:start; }
+.steps li::before { content:counter(s); width:24px; height:24px; border-radius:50%; background:var(--accent); color:var(--on-accent); font:700 13px/24px var(--sans); text-align:center; }
+.dotk { width:10px; height:10px; border-radius:50%; background:var(--metal); border:2px solid var(--wire-edge); display:inline-block; }
+td.num { font-variant-numeric:tabular-nums; }
+.l298 { fill:var(--l298); }
+.hs { fill:var(--hs); }
+.fin { stroke:var(--hs-fin); stroke-width:3; }
+.hs-t { fill:var(--l298-fg); paint-order:stroke; stroke:var(--hs); stroke-width:4px; font:600 12px var(--mono); }
+.lb-t { fill:var(--l298-fg); font:700 13px var(--sans); letter-spacing:.06em; }
+.lb-s { fill:var(--l298-fg); font:500 11.5px var(--mono); }
+.lb-x { fill:var(--l298-fg); font:italic 400 11px var(--sans); opacity:.8; }
+.term { fill:var(--term); }
+.screw { fill:var(--metal); stroke:var(--term-dark); stroke-width:1.5; }
+.slot { stroke:var(--term-dark); stroke-width:1.5; }
+.hdr { fill:var(--pin); }
+.jcap { fill:var(--conn); }
+.tt { fill:var(--tt); stroke:var(--tt-edge); stroke-width:1.5; }
+.ttcan { fill:var(--metal); stroke:var(--tt-edge); stroke-width:1.2; }
+.shaft { fill:#fbfbf7; stroke:var(--tt-edge); stroke-width:1.5; }
+.shaft-d { fill:var(--tt-edge); opacity:.35; }
+.tt-t { fill:var(--tt-fg); font:700 13px var(--sans); }
+.tt-s { fill:var(--tt-fg); font:500 11px var(--sans); opacity:.85; }
+.wedges { fill:none; stroke:var(--wire-edge); stroke-width:6.5; stroke-linecap:round; stroke-linejoin:round; }
+.wires { fill:none; stroke-width:3.8; stroke-linecap:round; stroke-linejoin:round; }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ligações e montagem da garra hidráulica</h1>
+    <p class="lead">ESP32 com 2 pontes H L298N e 4 motores amarelos, montado com jumpers e bornes de parafuso, sem emendar fios. 8 seringas em 4 pares, e o celular controla tudo pela rede Wi‑Fi do próprio ESP32.</p>
+  </header>
+
+  <section>
+    <h2>Ligação elétrica com ponte H</h2>
+    <p class="note">ESP32 no centro, uma ponte H L298N de cada lado e dois motores amarelos em cada ponte. Sem emenda: os sinais são encaixados com jumper, e motores e fonte vão em bornes de parafuso.</p>
+    <div class="panel"><svg viewBox="0 0 1200 800" role="img" aria-label="Ligação: ESP32 no centro; pinos 32, 33, 25 e 26 vão para as entradas IN1 a IN4 da ponte H 1 à esquerda; pinos 23, 22, 19 e 18 vão para a ponte H 2 à direita; cada ponte H tem dois motores amarelos nos bornes OUT; os bornes +12V e GND das pontes e o GND do ESP32 vão para as trilhas da protoboard, onde também entra a fonte de 7 a 9 volts."><rect class="board" x="510" y="20" width="180" height="560" rx="10"/><rect x="560" y="30" width="80" height="26" rx="3" fill="none" stroke="var(--board-fg)" stroke-opacity=".45"/><path d="M566 50 v-14 h10 v14 h10 v-14 h10 v14 h10 v-14 h10 v14 h10 v-14" fill="none" stroke="var(--board-fg)" stroke-opacity=".6" stroke-width="1.6"/><rect class="chip" x="565" y="66" width="70" height="62" rx="4"/><text x="600" y="102" text-anchor="middle" style="fill:var(--board-fg);font:600 13px var(--sans)">ESP32</text><rect x="586" y="580" width="28" height="16" rx="3" fill="var(--part-stroke)"/><text class="ts" x="600" y="612" text-anchor="middle">USB</text><circle class="pin-off" cx="524" cy="150" r="4"/><text class="pl" x="536" y="154">3V3</text><circle class="pin-off" cx="524" cy="172" r="4"/><text class="pl" x="536" y="176">EN</text><circle class="pin-off" cx="524" cy="194" r="4"/><text class="pl" x="536" y="198">VP</text><circle class="pin-off" cx="524" cy="216" r="4"/><text class="pl" x="536" y="220">VN</text><circle class="pin-off" cx="524" cy="238" r="4"/><text class="pl" x="536" y="242">34</text><circle class="pin-off" cx="524" cy="260" r="4"/><text class="pl" x="536" y="264">35</text><circle class="pin" cx="524" cy="282" r="5.5"/><text class="pl-on" x="536" y="286">32</text><circle class="pin" cx="524" cy="304" r="5.5"/><text class="pl-on" x="536" y="308">33</text><circle class="pin" cx="524" cy="326" r="5.5"/><text class="pl-on" x="536" y="330">25</text><circle class="pin" cx="524" cy="348" r="5.5"/><text class="pl-on" x="536" y="352">26</text><circle class="pin-off" cx="524" cy="370" r="4"/><text class="pl" x="536" y="374">27</text><circle class="pin-off" cx="524" cy="392" r="4"/><text class="pl" x="536" y="396">14</text><circle class="pin-off" cx="524" cy="414" r="4"/><text class="pl" x="536" y="418">12</text><circle class="pin" cx="524" cy="436" r="5.5"/><text class="pl-on" x="536" y="440">GND</text><circle class="pin-off" cx="524" cy="458" r="4"/><text class="pl" x="536" y="462">13</text><circle class="pin-off" cx="524" cy="480" r="4"/><text class="pl" x="536" y="484">D2</text><circle class="pin-off" cx="524" cy="502" r="4"/><text class="pl" x="536" y="506">D3</text><circle class="pin-off" cx="524" cy="524" r="4"/><text class="pl" x="536" y="528">CMD</text><circle class="pin-off" cx="524" cy="546" r="4"/><text class="pl" x="536" y="550">5V</text><circle class="pin-off" cx="676" cy="150" r="4"/><text class="pl" x="664" y="154" text-anchor="end">GND</text><circle class="pin" cx="676" cy="172" r="5.5"/><text class="pl-on" x="664" y="176" text-anchor="end">23</text><circle class="pin" cx="676" cy="194" r="5.5"/><text class="pl-on" x="664" y="198" text-anchor="end">22</text><circle class="pin-off" cx="676" cy="216" r="4"/><text class="pl" x="664" y="220" text-anchor="end">TX</text><circle class="pin-off" cx="676" cy="238" r="4"/><text class="pl" x="664" y="242" text-anchor="end">RX</text><circle class="pin-off" cx="676" cy="260" r="4"/><text class="pl" x="664" y="264" text-anchor="end">21</text><circle class="pin-off" cx="676" cy="282" r="4"/><text class="pl" x="664" y="286" text-anchor="end">GND</text><circle class="pin" cx="676" cy="304" r="5.5"/><text class="pl-on" x="664" y="308" text-anchor="end">19</text><circle class="pin" cx="676" cy="326" r="5.5"/><text class="pl-on" x="664" y="330" text-anchor="end">18</text><circle class="pin-off" cx="676" cy="348" r="4"/><text class="pl" x="664" y="352" text-anchor="end">5</text><circle class="pin-off" cx="676" cy="370" r="4"/><text class="pl" x="664" y="374" text-anchor="end">17</text><circle class="pin-off" cx="676" cy="392" r="4"/><text class="pl" x="664" y="396" text-anchor="end">16</text><circle class="pin-off" cx="676" cy="414" r="4"/><text class="pl" x="664" y="418" text-anchor="end">4</text><circle class="pin-off" cx="676" cy="436" r="4"/><text class="pl" x="664" y="440" text-anchor="end">0</text><circle class="pin-off" cx="676" cy="458" r="4"/><text class="pl" x="664" y="462" text-anchor="end">2</text><circle class="pin-off" cx="676" cy="480" r="4"/><text class="pl" x="664" y="484" text-anchor="end">15</text><circle class="pin-off" cx="676" cy="502" r="4"/><text class="pl" x="664" y="506" text-anchor="end">D1</text><circle class="pin-off" cx="676" cy="524" r="4"/><text class="pl" x="664" y="528" text-anchor="end">D0</text><circle class="pin-off" cx="676" cy="546" r="4"/><text class="pl" x="664" y="550" text-anchor="end">CLK</text><rect class="l298" x="60" y="160" width="240" height="360" rx="8"/><rect class="hs" x="78" y="250" width="72" height="180" rx="3"/><line x1="86" y1="258" x2="86" y2="422" class="fin"/><line x1="96" y1="258" x2="96" y2="422" class="fin"/><line x1="106" y1="258" x2="106" y2="422" class="fin"/><line x1="116" y1="258" x2="116" y2="422" class="fin"/><line x1="126" y1="258" x2="126" y2="422" class="fin"/><line x1="136" y1="258" x2="136" y2="422" class="fin"/><text x="114" y="345" text-anchor="middle" class="hs-t">L298N</text><text x="114" y="466" text-anchor="middle" class="lb-t">PONTE H 1</text><rect class="term" x="160" y="160" width="60" height="26" rx="3"/><circle class="screw" cx="175" cy="173" r="6.5"/><line x1="171" y1="173" x2="179" y2="173" class="slot"/><circle class="screw" cx="205" cy="173" r="6.5"/><line x1="201" y1="173" x2="209" y2="173" class="slot"/><text x="175" y="204" text-anchor="middle" class="lb-s">OUT1</text><text x="205" y="204" text-anchor="middle" class="lb-s">OUT2</text><rect class="term" x="160" y="494" width="60" height="26" rx="3"/><circle class="screw" cx="175" cy="507" r="6.5"/><line x1="171" y1="507" x2="179" y2="507" class="slot"/><circle class="screw" cx="205" cy="507" r="6.5"/><line x1="201" y1="507" x2="209" y2="507" class="slot"/><text x="175" y="484" text-anchor="middle" class="lb-s">OUT3</text><text x="205" y="484" text-anchor="middle" class="lb-s">OUT4</text><rect class="hdr" x="288.5" y="256.5" width="7" height="7"/><rect class="hdr" x="266.5" y="256.5" width="7" height="7"/><rect class="jcap" x="263" y="253" width="36" height="14" rx="2"/><text x="252" y="264" text-anchor="end" class="lb-s">ENA</text><rect class="hdr" x="288.5" y="278.5" width="7" height="7"/><text x="278" y="286" text-anchor="end" class="lb-s">IN1</text><rect class="hdr" x="288.5" y="300.5" width="7" height="7"/><text x="278" y="308" text-anchor="end" class="lb-s">IN2</text><rect class="hdr" x="288.5" y="322.5" width="7" height="7"/><text x="278" y="330" text-anchor="end" class="lb-s">IN3</text><rect class="hdr" x="288.5" y="344.5" width="7" height="7"/><text x="278" y="352" text-anchor="end" class="lb-s">IN4</text><rect class="hdr" x="288.5" y="366.5" width="7" height="7"/><rect class="hdr" x="266.5" y="366.5" width="7" height="7"/><rect class="jcap" x="263" y="363" width="36" height="14" rx="2"/><text x="252" y="374" text-anchor="end" class="lb-s">ENB</text><rect class="term" x="274" y="400" width="26" height="82" rx="3"/><circle class="screw" cx="287" cy="414" r="6.5"/><line x1="283" y1="414" x2="291" y2="414" class="slot"/><text x="267" y="418" text-anchor="end" class="lb-s">+12V</text><circle class="screw" cx="287" cy="441" r="6.5"/><line x1="283" y1="441" x2="291" y2="441" class="slot"/><text x="267" y="445" text-anchor="end" class="lb-s">GND</text><circle class="screw" cx="287" cy="468" r="6.5"/><line x1="283" y1="468" x2="291" y2="468" class="slot"/><text x="267" y="472" text-anchor="end" class="lb-s">+5V</text><text x="267" y="484" text-anchor="end" class="lb-x">vazio</text><rect class="l298" x="900" y="160" width="240" height="360" rx="8"/><rect class="hs" x="1050" y="250" width="72" height="180" rx="3"/><line x1="1058" y1="258" x2="1058" y2="422" class="fin"/><line x1="1068" y1="258" x2="1068" y2="422" class="fin"/><line x1="1078" y1="258" x2="1078" y2="422" class="fin"/><line x1="1088" y1="258" x2="1088" y2="422" class="fin"/><line x1="1098" y1="258" x2="1098" y2="422" class="fin"/><line x1="1108" y1="258" x2="1108" y2="422" class="fin"/><text x="1086" y="345" text-anchor="middle" class="hs-t">L298N</text><text x="1086" y="466" text-anchor="middle" class="lb-t">PONTE H 2</text><rect class="term" x="980" y="160" width="60" height="26" rx="3"/><circle class="screw" cx="995" cy="173" r="6.5"/><line x1="991" y1="173" x2="999" y2="173" class="slot"/><circle class="screw" cx="1025" cy="173" r="6.5"/><line x1="1021" y1="173" x2="1029" y2="173" class="slot"/><text x="995" y="204" text-anchor="middle" class="lb-s">OUT2</text><text x="1025" y="204" text-anchor="middle" class="lb-s">OUT1</text><rect class="term" x="980" y="494" width="60" height="26" rx="3"/><circle class="screw" cx="995" cy="507" r="6.5"/><line x1="991" y1="507" x2="999" y2="507" class="slot"/><circle class="screw" cx="1025" cy="507" r="6.5"/><line x1="1021" y1="507" x2="1029" y2="507" class="slot"/><text x="995" y="484" text-anchor="middle" class="lb-s">OUT4</text><text x="1025" y="484" text-anchor="middle" class="lb-s">OUT3</text><rect class="hdr" x="904.5" y="234.5" width="7" height="7"/><rect class="hdr" x="926.5" y="234.5" width="7" height="7"/><rect class="jcap" x="901" y="231" width="36" height="14" rx="2"/><text x="948" y="242" text-anchor="start" class="lb-s">ENA</text><rect class="hdr" x="904.5" y="256.5" width="7" height="7"/><text x="922" y="264" text-anchor="start" class="lb-s">IN1</text><rect class="hdr" x="904.5" y="278.5" width="7" height="7"/><text x="922" y="286" text-anchor="start" class="lb-s">IN2</text><rect class="hdr" x="904.5" y="300.5" width="7" height="7"/><text x="922" y="308" text-anchor="start" class="lb-s">IN3</text><rect class="hdr" x="904.5" y="322.5" width="7" height="7"/><text x="922" y="330" text-anchor="start" class="lb-s">IN4</text><rect class="hdr" x="904.5" y="344.5" width="7" height="7"/><rect class="hdr" x="926.5" y="344.5" width="7" height="7"/><rect class="jcap" x="901" y="341" width="36" height="14" rx="2"/><text x="948" y="352" text-anchor="start" class="lb-s">ENB</text><rect class="term" x="900" y="400" width="26" height="82" rx="3"/><circle class="screw" cx="913" cy="414" r="6.5"/><line x1="909" y1="414" x2="917" y2="414" class="slot"/><text x="933" y="418" text-anchor="start" class="lb-s">+12V</text><circle class="screw" cx="913" cy="441" r="6.5"/><line x1="909" y1="441" x2="917" y2="441" class="slot"/><text x="933" y="445" text-anchor="start" class="lb-s">GND</text><circle class="screw" cx="913" cy="468" r="6.5"/><line x1="909" y1="468" x2="917" y2="468" class="slot"/><text x="933" y="472" text-anchor="start" class="lb-s">+5V</text><text x="933" y="484" text-anchor="start" class="lb-x">vazio</text><path class="wedges" d="M524.0 282.0 L292.0 282.0"/><path class="wires" style="stroke:var(--j-or)" d="M524.0 282.0 L292.0 282.0"/><circle class="tip" cx="292" cy="282" r="4.2"/><path class="wedges" d="M524.0 304.0 L292.0 304.0"/><path class="wires" style="stroke:var(--j-ye)" d="M524.0 304.0 L292.0 304.0"/><circle class="tip" cx="292" cy="304" r="4.2"/><path class="wedges" d="M524.0 326.0 L292.0 326.0"/><path class="wires" style="stroke:var(--j-gr)" d="M524.0 326.0 L292.0 326.0"/><circle class="tip" cx="292" cy="326" r="4.2"/><path class="wedges" d="M524.0 348.0 L292.0 348.0"/><path class="wires" style="stroke:var(--j-bl)" d="M524.0 348.0 L292.0 348.0"/><circle class="tip" cx="292" cy="348" r="4.2"/><path class="wedges" d="M676.0 172.0 L791.0 172.0 Q800.0 172.0 800.0 181.0 L800.0 251.0 Q800.0 260.0 809.0 260.0 L908.0 260.0"/><path class="wires" style="stroke:var(--j-or)" d="M676.0 172.0 L791.0 172.0 Q800.0 172.0 800.0 181.0 L800.0 251.0 Q800.0 260.0 809.0 260.0 L908.0 260.0"/><circle class="tip" cx="908" cy="260" r="4.2"/><path class="wedges" d="M676.0 194.0 L771.0 194.0 Q780.0 194.0 780.0 203.0 L780.0 273.0 Q780.0 282.0 789.0 282.0 L908.0 282.0"/><path class="wires" style="stroke:var(--j-ye)" d="M676.0 194.0 L771.0 194.0 Q780.0 194.0 780.0 203.0 L780.0 273.0 Q780.0 282.0 789.0 282.0 L908.0 282.0"/><circle class="tip" cx="908" cy="282" r="4.2"/><path class="wedges" d="M676.0 304.0 L908.0 304.0"/><path class="wires" style="stroke:var(--j-gr)" d="M676.0 304.0 L908.0 304.0"/><circle class="tip" cx="908" cy="304" r="4.2"/><path class="wedges" d="M676.0 326.0 L908.0 326.0"/><path class="wires" style="stroke:var(--j-bl)" d="M676.0 326.0 L908.0 326.0"/><circle class="tip" cx="908" cy="326" r="4.2"/><circle class="tip" cx="524" cy="282" r="4.2"/><circle class="tip" cx="524" cy="304" r="4.2"/><circle class="tip" cx="524" cy="326" r="4.2"/><circle class="tip" cx="524" cy="348" r="4.2"/><circle class="tip" cx="676" cy="172" r="4.2"/><circle class="tip" cx="676" cy="194" r="4.2"/><circle class="tip" cx="676" cy="304" r="4.2"/><circle class="tip" cx="676" cy="326" r="4.2"/><rect class="tt" x="150" y="64" width="120" height="48" rx="5"/><rect class="ttcan" x="110" y="71" width="40" height="34" rx="9"/><circle class="shaft" cx="248" cy="88" r="9"/><rect x="242" y="85" width="12" height="6" class="shaft-d"/><text x="198" y="86" text-anchor="middle" class="tt-t">Base</text><text x="198" y="102" text-anchor="middle" class="tt-s">motor TT</text><rect class="tt" x="150" y="560" width="120" height="48" rx="5"/><rect class="ttcan" x="110" y="567" width="40" height="34" rx="9"/><circle class="shaft" cx="248" cy="584" r="9"/><rect x="242" y="581" width="12" height="6" class="shaft-d"/><text x="198" y="582" text-anchor="middle" class="tt-t">Ombro</text><text x="198" y="598" text-anchor="middle" class="tt-s">motor TT</text><rect class="tt" x="930" y="64" width="120" height="48" rx="5"/><rect class="ttcan" x="1050" y="71" width="40" height="34" rx="9"/><circle class="shaft" cx="952" cy="88" r="9"/><rect x="946" y="85" width="12" height="6" class="shaft-d"/><text x="1002" y="86" text-anchor="middle" class="tt-t">Cotovelo</text><text x="1002" y="102" text-anchor="middle" class="tt-s">motor TT</text><rect class="tt" x="930" y="560" width="120" height="48" rx="5"/><rect class="ttcan" x="1050" y="567" width="40" height="34" rx="9"/><circle class="shaft" cx="952" cy="584" r="9"/><rect x="946" y="581" width="12" height="6" class="shaft-d"/><text x="1002" y="582" text-anchor="middle" class="tt-t">Garra</text><text x="1002" y="598" text-anchor="middle" class="tt-s">motor TT</text><path class="wedges" d="M120.0 105.0 L120.0 126.0 Q120.0 135.0 129.0 135.0 L166.0 135.0 Q175.0 135.0 175.0 144.0 L175.0 173.0"/><path class="wires" style="stroke:var(--w-red)" d="M120.0 105.0 L120.0 126.0 Q120.0 135.0 129.0 135.0 L166.0 135.0 Q175.0 135.0 175.0 144.0 L175.0 173.0"/><path class="wedges" d="M138.0 105.0 L138.0 116.0 Q138.0 125.0 147.0 125.0 L196.0 125.0 Q205.0 125.0 205.0 134.0 L205.0 173.0"/><path class="wires" style="stroke:var(--w-black)" d="M138.0 105.0 L138.0 116.0 Q138.0 125.0 147.0 125.0 L196.0 125.0 Q205.0 125.0 205.0 134.0 L205.0 173.0"/><circle class="tip" cx="175" cy="173" r="4.2"/><circle class="tip" cx="205" cy="173" r="4.2"/><path class="wedges" d="M120.0 567.0 L120.0 546.0 Q120.0 537.0 129.0 537.0 L166.0 537.0 Q175.0 537.0 175.0 528.0 L175.0 507.0"/><path class="wires" style="stroke:var(--w-red)" d="M120.0 567.0 L120.0 546.0 Q120.0 537.0 129.0 537.0 L166.0 537.0 Q175.0 537.0 175.0 528.0 L175.0 507.0"/><path class="wedges" d="M138.0 567.0 L138.0 556.0 Q138.0 547.0 147.0 547.0 L196.0 547.0 Q205.0 547.0 205.0 538.0 L205.0 507.0"/><path class="wires" style="stroke:var(--w-black)" d="M138.0 567.0 L138.0 556.0 Q138.0 547.0 147.0 547.0 L196.0 547.0 Q205.0 547.0 205.0 538.0 L205.0 507.0"/><circle class="tip" cx="175" cy="507" r="4.2"/><circle class="tip" cx="205" cy="507" r="4.2"/><path class="wedges" d="M1080.0 105.0 L1080.0 126.0 Q1080.0 135.0 1071.0 135.0 L1034.0 135.0 Q1025.0 135.0 1025.0 144.0 L1025.0 173.0"/><path class="wires" style="stroke:var(--w-red)" d="M1080.0 105.0 L1080.0 126.0 Q1080.0 135.0 1071.0 135.0 L1034.0 135.0 Q1025.0 135.0 1025.0 144.0 L1025.0 173.0"/><path class="wedges" d="M1062.0 105.0 L1062.0 116.0 Q1062.0 125.0 1053.0 125.0 L1004.0 125.0 Q995.0 125.0 995.0 134.0 L995.0 173.0"/><path class="wires" style="stroke:var(--w-black)" d="M1062.0 105.0 L1062.0 116.0 Q1062.0 125.0 1053.0 125.0 L1004.0 125.0 Q995.0 125.0 995.0 134.0 L995.0 173.0"/><circle class="tip" cx="1025" cy="173" r="4.2"/><circle class="tip" cx="995" cy="173" r="4.2"/><path class="wedges" d="M1080.0 567.0 L1080.0 546.0 Q1080.0 537.0 1071.0 537.0 L1034.0 537.0 Q1025.0 537.0 1025.0 528.0 L1025.0 507.0"/><path class="wires" style="stroke:var(--w-red)" d="M1080.0 567.0 L1080.0 546.0 Q1080.0 537.0 1071.0 537.0 L1034.0 537.0 Q1025.0 537.0 1025.0 528.0 L1025.0 507.0"/><path class="wedges" d="M1062.0 567.0 L1062.0 556.0 Q1062.0 547.0 1053.0 547.0 L1004.0 547.0 Q995.0 547.0 995.0 538.0 L995.0 507.0"/><path class="wires" style="stroke:var(--w-black)" d="M1062.0 567.0 L1062.0 556.0 Q1062.0 547.0 1053.0 547.0 L1004.0 547.0 Q995.0 547.0 995.0 538.0 L995.0 507.0"/><circle class="tip" cx="1025" cy="507" r="4.2"/><circle class="tip" cx="995" cy="507" r="4.2"/><rect class="bb" x="400" y="622" width="400" height="92" rx="7"/><line class="rail-pos" x1="414" y1="632" x2="786" y2="632"/><line class="rail-neg" x1="414" y1="670" x2="786" y2="670"/><rect class="hole" x="415.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="415.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="415.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="415.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="429.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="429.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="429.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="429.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="443.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="443.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="443.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="443.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="457.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="457.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="457.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="457.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="471.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="471.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="471.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="471.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="485.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="485.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="499.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="499.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="499.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="499.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="513.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="513.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="513.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="513.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="527.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="527.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="527.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="527.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="541.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="541.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="541.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="541.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="555.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="555.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="555.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="555.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="569.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="569.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="583.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="583.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="583.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="583.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="597.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="597.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="597.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="597.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="611.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="611.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="611.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="611.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="625.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="625.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="625.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="625.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="639.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="639.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="639.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="639.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="653.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="653.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="667.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="667.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="667.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="667.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="681.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="681.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="681.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="681.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="695.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="695.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="695.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="695.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="709.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="709.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="709.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="709.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="723.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="723.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="723.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="723.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="737.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="737.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="751.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="751.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="751.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="751.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="765.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="765.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="765.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="765.5" y="701.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="779.5" y="639.5" width="5" height="5" opacity="1"/><rect class="hole" x="779.5" y="657.5" width="5" height="5" opacity="1"/><rect class="hole" x="779.5" y="687.5" width="5" height="5" opacity="0.45"/><rect class="hole" x="779.5" y="701.5" width="5" height="5" opacity="0.45"/><text class="rl-pos" x="408" y="646" text-anchor="middle">+</text><text class="rl-neg" x="408" y="664" text-anchor="middle">−</text><path class="wedges" d="M287.0 414.0 L437.0 414.0 Q446.0 414.0 446.0 423.0 L446.0 642.0"/><path class="wires" style="stroke:var(--w-red)" d="M287.0 414.0 L437.0 414.0 Q446.0 414.0 446.0 423.0 L446.0 642.0"/><circle class="tip" cx="446" cy="642" r="4.2"/><circle class="tip" cx="287" cy="414" r="4.2"/><path class="wedges" d="M287.0 441.0 L423.0 441.0 Q432.0 441.0 432.0 450.0 L432.0 660.0"/><path class="wires" style="stroke:var(--w-black)" d="M287.0 441.0 L423.0 441.0 Q432.0 441.0 432.0 450.0 L432.0 660.0"/><circle class="tip" cx="432" cy="660" r="4.2"/><circle class="tip" cx="287" cy="441" r="4.2"/><path class="wedges" d="M913.0 414.0 L763.0 414.0 Q754.0 414.0 754.0 423.0 L754.0 642.0"/><path class="wires" style="stroke:var(--w-red)" d="M913.0 414.0 L763.0 414.0 Q754.0 414.0 754.0 423.0 L754.0 642.0"/><circle class="tip" cx="754" cy="642" r="4.2"/><circle class="tip" cx="913" cy="414" r="4.2"/><path class="wedges" d="M913.0 441.0 L777.0 441.0 Q768.0 441.0 768.0 450.0 L768.0 660.0"/><path class="wires" style="stroke:var(--w-black)" d="M913.0 441.0 L777.0 441.0 Q768.0 441.0 768.0 450.0 L768.0 660.0"/><circle class="tip" cx="768" cy="660" r="4.2"/><circle class="tip" cx="913" cy="441" r="4.2"/><path class="wedges" d="M524.0 436.0 L483.0 436.0 Q474.0 436.0 474.0 445.0 L474.0 660.0"/><path class="wires" style="stroke:var(--w-black)" d="M524.0 436.0 L483.0 436.0 Q474.0 436.0 474.0 445.0 L474.0 660.0"/><circle class="tip" cx="474" cy="660" r="4.2"/><circle class="tip" cx="524" cy="436" r="4.2"/><rect class="psu" x="530" y="728" width="140" height="64" rx="8"/><text class="tbig" x="600" y="767" text-anchor="middle">Fonte 7–9 V</text><text class="ts" x="600" y="784" text-anchor="middle">2 A ou mais</text><path class="wedges" d="M570.0 728.0 L570.0 660.0"/><path class="wires" style="stroke:var(--w-black)" d="M570.0 728.0 L570.0 660.0"/><circle class="cu" cx="570" cy="660" r="4.2"/><path class="wedges" d="M630.0 728.0 L630.0 642.0"/><path class="wires" style="stroke:var(--w-red)" d="M630.0 728.0 L630.0 642.0"/><circle class="cu" cx="630" cy="642" r="4.2"/><text class="t" x="584" y="746" text-anchor="middle">−</text><text class="t" x="616" y="746" text-anchor="middle">+</text><g class="badge"><circle cx="420" cy="254" r="11"/><text x="420" y="258.5" text-anchor="middle">1</text></g><g class="badge"><circle cx="236" cy="236" r="11"/><text x="236" y="240.5" text-anchor="middle">2</text></g><g class="badge"><circle cx="92" cy="140" r="11"/><text x="92" y="144.5" text-anchor="middle">3</text></g><g class="badge"><circle cx="496" cy="480" r="11"/><text x="496" y="484.5" text-anchor="middle">4</text></g><g class="badge"><circle cx="364" cy="400" r="11"/><text x="364" y="404.5" text-anchor="middle">5</text></g><g class="badge"><circle cx="690" cy="742" r="11"/><text x="690" y="746.5" text-anchor="middle">6</text></g></svg></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--j-or)"></i><i class="sw" style="background:var(--j-ye)"></i><i class="sw" style="background:var(--j-gr)"></i><i class="sw" style="background:var(--j-bl)"></i>sinais IN1 a IN4 (jumper fêmea‑fêmea)</span>
+      <span><i class="sw" style="background:var(--w-red)"></i>+ da fonte</span>
+      <span><i class="sw" style="background:var(--w-black)"></i>GND</span>
+      <span><i class="dotk"></i>ponta encaixada ou presa no borne</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Os pinos</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Motor</th><th>Ponte H</th><th>Entradas</th><th>Pinos do ESP32</th><th>Borne do motor</th></tr></thead>
+        <tbody>
+          <tr><td>Base</td><td>1</td><td>IN1 · IN2</td><td><code>32 · 33</code></td><td>OUT1 · OUT2</td></tr>
+          <tr><td>Ombro</td><td>1</td><td>IN3 · IN4</td><td><code>25 · 26</code></td><td>OUT3 · OUT4</td></tr>
+          <tr><td>Cotovelo</td><td>2</td><td>IN1 · IN2</td><td><code>23 · 22</code></td><td>OUT1 · OUT2</td></tr>
+          <tr><td>Garra</td><td>2</td><td>IN3 · IN4</td><td><code>19 · 18</code></td><td>OUT3 · OUT4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">A ordem dos pinos no desenho é a da ESP32 DevKit de 38 pinos. Em outras placas a posição muda, mas os números impressos (32, 33, 25…) são os mesmos: siga os números.</p>
+  </section>
+
+  <section>
+    <h2>Passo a passo</h2>
+    <ol class="steps">
+      <li><b>Sinais:</b> 8 jumpers fêmea‑fêmea dos pinos do ESP32 até os pinos IN das pontes H, conforme a tabela.</li>
+      <li><b>Jumpers ENA e ENB:</b> deixe as duas capinhas pretas no lugar em cada ponte H. Sem elas o motor não gira.</li>
+      <li><b>Motores:</b> os 2 fios de cada motor vão no borne OUT. Solte o parafuso, encaixe o fio e aperte.</li>
+      <li><b>GND do ESP32 na trilha −</b> da protoboard, com um jumper macho‑fêmea.</li>
+      <li><b>Alimentação das pontes:</b> borne <b>+12V</b> na trilha +, borne <b>GND</b> na trilha −. Use jumper macho‑macho: uma ponta presa no borne, a outra espetada na trilha. O borne <b>+5V fica vazio</b>.</li>
+      <li><b>Fonte por último:</b> fio − na trilha −, fio + na trilha +. Só ligue na tomada depois de conferir tudo.</li>
+    </ol>
+  </section>
+
+  <div class="duo">
+    <section>
+      <h2>Detalhe: motor empurrando a seringa</h2>
+      <div class="panel"><svg viewBox="0 0 520 260" role="img" aria-label="Motor amarelo com uma manivela no eixo; uma haste liga a manivela ao êmbolo da seringa mestre. Girando para um lado empurra, para o outro puxa."><defs><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs><rect class="tt" x="40" y="96" width="140" height="56" rx="6"/><rect class="ttcan" x="2" y="104" width="40" height="40" rx="10"/><text class="ts" x="98" y="176" text-anchor="middle">motor amarelo (TT)</text><path class="arrow" d="M120 82 A 46 46 0 0 1 196 92" marker-start="url(#ah3)" marker-end="url(#ah3)"/><line x1="150.0" y1="124.0" x2="150.0" y2="74.0" class="wo" stroke-width="13"/><line x1="150.0" y1="124.0" x2="150.0" y2="74.0" class="wi" stroke-width="10"/><circle class="shaft" cx="150" cy="124" r="9"/><line x1="150.0" y1="74.0" x2="300.0" y2="124.0" class="link" /><circle class="pv" cx="150" cy="74" r="5"/><circle class="pv" cx="300" cy="124" r="5"/><line x1="490.0" y1="124.0" x2="480.0" y2="124.0" class="sy-noz" /><line x1="480.0" y1="124.0" x2="381.0" y2="124.0" class="sy-out" /><line x1="478.0" y1="124.0" x2="383.0" y2="124.0" class="sy-in" /><line x1="381.0" y1="124.0" x2="300.0" y2="124.0" class="sy-rod" /><line x1="381.0" y1="133.0" x2="381.0" y2="115.0" class="sy-head" /><rect class="metal" x="392" y="108" width="10" height="32" rx="2"/><rect class="metal" x="452" y="108" width="10" height="32" rx="2"/><text class="t" x="112" y="64" text-anchor="end">manivela</text><text class="t" x="226" y="88" text-anchor="middle">haste</text><text class="ts" x="300" y="150" text-anchor="middle">parafuso no êmbolo</text><text class="t" x="420" y="168" text-anchor="middle">seringa mestre</text><text class="t" x="20" y="214" text-anchor="start">Girar para um lado empurra o êmbolo e girar para o outro puxa.</text><text class="ts" x="20" y="234" text-anchor="start">Use menos de meia volta: passou disso, a manivela inverte o movimento.</text></svg></div>
+    </section>
+    <section>
+      <h2>Detalhe: fio da fonte</h2>
+      <div class="panel"><svg viewBox="0 0 520 250" role="img" aria-label="Detalhe: ponta do fio da fonte descascada um centímetro, fiozinhos torcidos, espetada no furo da trilha."><rect x="20" y="104" width="250" height="22" rx="11" fill="var(--w-black)"/><rect x="20" y="136" width="250" height="22" rx="11" fill="var(--w-red)" opacity=".9"/><path d="M270 109 L330 109 L330 121 L270 121 Z" fill="var(--copper)"/><line x1="272" y1="109" x2="280" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="279" y1="109" x2="287" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="286" y1="109" x2="294" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="293" y1="109" x2="301" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="300" y1="109" x2="308" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="307" y1="109" x2="315" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="314" y1="109" x2="322" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="321" y1="109" x2="329" y2="121" stroke="var(--copper-dark)" stroke-width="1.6"/><path d="M270 141 L330 141 L330 153 L270 153 Z" fill="var(--copper)"/><line x1="272" y1="141" x2="280" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="279" y1="141" x2="287" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="286" y1="141" x2="294" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="293" y1="141" x2="301" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="300" y1="141" x2="308" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="307" y1="141" x2="315" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="314" y1="141" x2="322" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><line x1="321" y1="141" x2="329" y2="153" stroke="var(--copper-dark)" stroke-width="1.6"/><path d="M270 86 V96 M330 86 V96 M270 91 H330" stroke="var(--fg)" stroke-width="1.5" fill="none"/><text class="t" x="300" y="80" text-anchor="middle">1 cm</text><rect class="bb" x="360" y="70" width="140" height="120" rx="6"/><line class="rail-neg" x1="370" y1="100" x2="490" y2="100"/><line class="rail-pos" x1="370" y1="162" x2="490" y2="162"/><rect class="hole" x="381.5" y="112.5" width="5" height="5"/><rect class="hole" x="381.5" y="144.5" width="5" height="5"/><rect class="hole" x="395.5" y="112.5" width="5" height="5"/><rect class="hole" x="395.5" y="144.5" width="5" height="5"/><rect class="hole" x="409.5" y="112.5" width="5" height="5"/><rect class="hole" x="409.5" y="144.5" width="5" height="5"/><rect class="hole" x="423.5" y="112.5" width="5" height="5"/><rect class="hole" x="423.5" y="144.5" width="5" height="5"/><rect class="hole" x="437.5" y="112.5" width="5" height="5"/><rect class="hole" x="437.5" y="144.5" width="5" height="5"/><rect class="hole" x="451.5" y="112.5" width="5" height="5"/><rect class="hole" x="451.5" y="144.5" width="5" height="5"/><rect class="hole" x="465.5" y="112.5" width="5" height="5"/><rect class="hole" x="465.5" y="144.5" width="5" height="5"/><rect class="hole" x="479.5" y="112.5" width="5" height="5"/><rect class="hole" x="479.5" y="144.5" width="5" height="5"/><path d="M330 115 L398 115" stroke="var(--copper)" stroke-width="5"/><circle class="cu" cx="398" cy="115" r="4.2"/><path d="M330 147 L412 147" stroke="var(--copper)" stroke-width="5"/><circle class="cu" cx="412" cy="147" r="4.2"/><text class="ts" x="430" y="92" text-anchor="middle">trilha −</text><text class="ts" x="430" y="180" text-anchor="middle">trilha +</text><text class="t" x="20" y="196" text-anchor="start">Descasque 1 cm, torça bem os fiozinhos e espete no furo.</text><text class="ts" x="20" y="216" text-anchor="start">Se ficar frouxo, dobre a ponta ao meio antes de espetar.</text><text class="ts" x="20" y="234" text-anchor="start">Confira qual fio é o + com multímetro antes de ligar.</text></svg></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Lista de jumpers</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Tipo</th><th>Quantidade</th><th>Para quê</th></tr></thead>
+        <tbody>
+          <tr><td>Fêmea‑fêmea</td><td class="num">8</td><td>Pinos do ESP32 até IN1–IN4 das duas pontes H</td></tr>
+          <tr><td>Macho‑macho</td><td class="num">4</td><td>Bornes +12V e GND das duas pontes até as trilhas</td></tr>
+          <tr><td>Macho‑fêmea</td><td class="num">1</td><td>GND do ESP32 até a trilha −</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Os motores amarelos costumam vir com os fios já soldados. Se o seu veio sem fio, compre com fio ou peça para alguém soldar: é o único ponto do projeto que precisaria de solda.</p>
+  </section>
+
+  <section>
+    <h2>Antes de ligar a fonte</h2>
+    <ul class="checks">
+      <li>O <b>GND do ESP32 está na trilha −</b>, junto com o GND das duas pontes H. Sem isso os motores não obedecem.</li>
+      <li>Os <b>jumpers ENA e ENB</b> estão no lugar nas duas pontes.</li>
+      <li>O <b>borne +5V</b> das pontes está vazio, e nada vai no 5V ou no 3V3 do ESP32.</li>
+      <li>A fonte é de <b>7 a 9 V</b> e o fio + foi conferido com multímetro. O L298N perde uns 2 V, então chega 5 a 7 V nos motores.</li>
+      <li>Os parafusos dos bornes estão apertados: puxe de leve cada fio.</li>
+      <li>Faça o primeiro teste <b>sem as seringas</b>, para ver para que lado cada motor gira. Se estiver ao contrário, troque os 2 fios dele no borne OUT.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Um par de seringas (são 4 iguais)</h2>
+    <div class="panel">
+      <svg viewBox="0 0 1000 230" role="img" aria-label="O motor empurra o êmbolo da seringa mestre; a água passa pela mangueira e empurra o êmbolo da seringa escrava, que move a junta.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path class="arrowhead" d="M0 0 L10 5 L0 10 z"/>
+          </marker>
+        </defs>
+        <!-- Servo -->
+        <rect class="part" x="20" y="72" width="110" height="76" rx="8"/>
+        <text class="tbig" x="75" y="108" text-anchor="middle">Motor</text><text class="ts" x="75" y="126" text-anchor="middle">+ manivela</text>
+        <circle cx="130" cy="110" r="6" fill="var(--fg)"/>
+
+        <!-- Seringa mestre -->
+        <path class="rod" d="M130 110 H232"/>
+        <rect class="water" x="238" y="93" width="160" height="34"/>
+        <rect class="head" x="230" y="92" width="8" height="36" rx="1"/>
+        <path class="barrel" d="M200 88 H400 V132 H200"/>
+        <rect x="400" y="103" width="22" height="14" fill="var(--water-fill)" stroke="var(--part-stroke)" stroke-width="2"/>
+        <path class="arrow" d="M170 62 H230" marker-start="url(#ah)" marker-end="url(#ah)"/>
+
+        <!-- Mangueira -->
+        <path class="tube" d="M422 110 C 480 110, 480 170, 535 170 S 595 110, 648 110"/>
+
+        <!-- Seringa escrava -->
+        <rect x="648" y="103" width="22" height="14" fill="var(--water-fill)" stroke="var(--part-stroke)" stroke-width="2"/>
+        <rect class="water" x="672" y="93" width="92" height="34"/>
+        <rect class="head" x="764" y="92" width="8" height="36" rx="1"/>
+        <path class="barrel" d="M870 88 H670 V132 H870"/>
+        <path class="rod" d="M772 110 H905"/>
+        <path class="arrow" d="M780 62 H840" marker-start="url(#ah)" marker-end="url(#ah)"/>
+
+        <!-- Junta -->
+        <circle class="joint" cx="930" cy="110" r="24"/>
+        <circle cx="930" cy="110" r="5" fill="var(--accent)"/>
+        <path class="arrow" d="M908 76 A 40 40 0 0 1 952 76" marker-end="url(#ah)"/>
+
+        <text class="t" x="75" y="182" text-anchor="middle">empurra / puxa</text>
+        <text class="t" x="300" y="160" text-anchor="middle">Seringa MESTRE</text>
+        <text class="ts" x="300" y="178" text-anchor="middle">presa num suporte firme</text>
+        <text class="t" x="535" y="205" text-anchor="middle">Mangueira com água</text>
+        <text class="ts" x="535" y="222" text-anchor="middle">sem bolhas de ar</text>
+        <text class="t" x="770" y="160" text-anchor="middle">Seringa ESCRAVA</text>
+        <text class="ts" x="770" y="178" text-anchor="middle">fica na junta</text>
+        <text class="t" x="930" y="160" text-anchor="middle">Junta</text>
+      </svg>
+    </div>
+    <p class="note">Monte os dois êmbolos no meio do curso, com a manivela na metade do giro. Assim a junta consegue ir para os dois lados.</p>
+  </section>
+
+
+  <section>
+    <h2>Montagem física: o braço visto de lado</h2>
+    <div class="panel"><svg viewBox="0 0 1000 545" role="img" aria-label="Vista lateral do braço: base fixa, disco giratório, coluna, braço 1, braço 2 e pinça, com as seringas do ombro, cotovelo e garra e as mangueiras indo para a estação de controle."><path class="tube2" d="M272 400 Q 240 470 20 478"/><path class="tube2" d="M369 199 Q 290 215 236 262 L 228 420 Q 215 480 20 486"/><path class="tube2" d="M572 206 Q 540 200 522 190 L 262 282 L 222 300 L 220 420 Q 205 488 20 494"/><line x1="10" y1="500" x2="990" y2="500" class="ground"/><rect class="mdf" x="140" y="455" width="240" height="45" rx="3"/><rect class="metal" x="170" y="443" width="180" height="12" rx="2"/><rect class="wood" x="160" y="425" width="200" height="18" rx="4"/><rect class="wood" x="236" y="250" width="28" height="175" rx="3"/><line x1="272.0" y1="395.0" x2="264.0" y2="395.0" class="wo" stroke-width="6"/><line x1="250.0" y1="262.0" x2="530.0" y2="170.0" class="wo" stroke-width="23"/><line x1="250.0" y1="262.0" x2="530.0" y2="170.0" class="wi" stroke-width="20"/><line x1="530.0" y1="170.0" x2="770.0" y2="235.0" class="wo" stroke-width="19"/><line x1="530.0" y1="170.0" x2="770.0" y2="235.0" class="wi" stroke-width="16"/><line x1="530.0" y1="170.0" x2="522.0" y2="112.0" class="wo" stroke-width="9"/><line x1="530.0" y1="170.0" x2="522.0" y2="112.0" class="wi" stroke-width="6"/><path class="jaw" d="M770 235 L 845 212 L 882 228"/><path class="jaw" d="M770 238 L 845 262 L 882 246"/><line x1="770.0" y1="235.0" x2="764.0" y2="262.0" class="wo" stroke-width="7"/><line x1="770.0" y1="235.0" x2="764.0" y2="262.0" class="wi" stroke-width="4"/><line x1="267.1" y1="403.7" x2="272.0" y2="395.0" class="sy-noz" /><line x1="272.0" y1="395.0" x2="324.8" y2="302.0" class="sy-out" /><line x1="273.0" y1="393.3" x2="323.8" y2="303.7" class="sy-in" /><line x1="324.8" y1="302.0" x2="360.0" y2="240.0" class="sy-rod" /><line x1="317.0" y1="297.6" x2="332.6" y2="306.4" class="sy-head" /><circle class="pv" cx="272.0" cy="395.0" r="4.5"/><circle class="pv" cx="360.0" cy="240.0" r="4.5"/><line x1="360.3" y1="203.9" x2="369.0" y2="199.0" class="sy-noz" /><line x1="369.0" y1="199.0" x2="457.7" y2="148.5" class="sy-out" /><line x1="370.7" y1="198.0" x2="456.0" y2="149.5" class="sy-in" /><line x1="457.7" y1="148.5" x2="522.0" y2="112.0" class="sy-rod" /><line x1="453.3" y1="140.7" x2="462.2" y2="156.4" class="sy-head" /><circle class="pv" cx="369.0" cy="199.0" r="4.5"/><circle class="pv" cx="522.0" cy="112.0" r="4.5"/><line x1="562.4" y1="203.2" x2="572.0" y2="206.0" class="sy-noz" /><line x1="572.0" y1="206.0" x2="687.2" y2="239.6" class="sy-out" /><line x1="573.9" y1="206.6" x2="685.3" y2="239.0" class="sy-in" /><line x1="687.2" y1="239.6" x2="764.0" y2="262.0" class="sy-rod" /><line x1="689.7" y1="231.0" x2="684.7" y2="248.2" class="sy-head" /><circle class="pv" cx="572.0" cy="206.0" r="4.5"/><circle class="pv" cx="764.0" cy="262.0" r="4.5"/><circle class="pv" cx="250" cy="262" r="6"/><circle class="pv" cx="530" cy="170" r="6"/><circle class="pv" cx="770" cy="235" r="5"/><text class="t" x="392" y="488" text-anchor="start">Base fixa (MDF ou madeira)</text><line x1="388.0" y1="484.0" x2="370.0" y2="478.0" class="leader" /><text class="t" x="392" y="447" text-anchor="start">Disco giratório + rolamento</text><line x1="388.0" y1="443.0" x2="355.0" y2="436.0" class="leader" /><text class="t" x="140" y="330" text-anchor="end">Coluna</text><line x1="146.0" y1="326.0" x2="236.0" y2="326.0" class="leader" /><text class="t" x="196" y="245" text-anchor="end">Pivô do ombro</text><line x1="200.0" y1="248.0" x2="242.0" y2="260.0" class="leader" /><text class="t" x="384" y="350" text-anchor="start">Seringa do ombro</text><line x1="380.0" y1="345.0" x2="322.0" y2="312.0" class="leader" /><text class="ts" x="420" y="262" text-anchor="start">Braço 1 · ~20 cm</text><text class="t" x="410" y="122" text-anchor="middle">Seringa do cotovelo</text><text class="ts" x="540" y="100" text-anchor="start">Alavanca presa no braço 2</text><line x1="538.0" y1="104.0" x2="524.0" y2="113.0" class="leader" /><text class="ts" x="668" y="170" text-anchor="middle">Braço 2 · ~18 cm</text><text class="t" x="668" y="290" text-anchor="middle">Seringa da garra</text><text class="t" x="892" y="240" text-anchor="start">Pinça</text><text class="ts" x="20" y="528" text-anchor="start">4 mangueiras → estação de controle</text></svg></div>
+    <p class="note">Cada seringa escrava fica presa por dois pinos que giram (parafuso M3 com porca, sem apertar demais). As duas pontas precisam girar, senão a seringa trava quando a junta se move.</p>
+  </section>
+
+  <div class="duo">
+    <section>
+      <h2>Base vista de cima</h2>
+      <div class="panel"><svg width="0" height="0" style="position:absolute"><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs></svg><svg viewBox="0 0 520 380" role="img" aria-label="Vista de cima da base: a seringa presa na base fixa empurra um pino fora do centro do disco, fazendo-o girar de 90 a 120 graus."><rect class="mdf" x="20" y="20" width="480" height="340" rx="6"/><circle class="wood" cx="300" cy="180" r="120"/><circle cx="300" cy="180" r="92" fill="none" stroke="var(--metal)" stroke-width="3" stroke-dasharray="5 6"/><rect class="wood" x="286" y="166" width="28" height="28" rx="3" style="stroke:var(--wood-stroke);stroke-width:2"/><path class="arrow" d="M390 73 A 140 140 0 0 1 390 287" marker-start="url(#ah2)" marker-end="url(#ah2)"/><rect class="metal" x="58" y="310" width="24" height="18" rx="2"/><line x1="61.1" y1="322.6" x2="70.0" y2="318.0" class="sy-noz" /><line x1="70.0" y1="318.0" x2="172.0" y2="265.2" class="sy-out" /><line x1="71.8" y1="317.1" x2="170.2" y2="266.1" class="sy-in" /><line x1="172.0" y1="265.2" x2="240.0" y2="230.0" class="sy-rod" /><line x1="167.9" y1="257.2" x2="176.1" y2="273.2" class="sy-head" /><circle class="pv" cx="70.0" cy="318.0" r="4.5"/><circle class="pv" cx="240.0" cy="230.0" r="4.5"/><text class="t" x="300" y="105" text-anchor="middle">Disco giratório</text><text class="ts" x="322" y="210" text-anchor="start">coluna</text><text class="t" x="110" y="236" text-anchor="end">Pino a 3–5 cm</text><text class="ts" x="110" y="254" text-anchor="end">do centro</text><line x1="114.0" y1="240.0" x2="234.0" y2="230.0" class="leader" /><text class="ts" x="96" y="350" text-anchor="start">Seringa da base, presa na parte fixa</text><text class="t" x="410" y="330" text-anchor="middle">90–120° de giro</text></svg></div>
+    </section>
+    <section>
+      <h2>Detalhe da pinça</h2>
+      <div class="panel"><svg viewBox="0 0 520 300" role="img" aria-label="Detalhe da pinça: a haste da seringa move uma peça deslizante que puxa ou empurra as duas pinças por duas hastes, girando-as em torno de dois parafusos."><rect class="mdf" x="226" y="80" width="150" height="140" rx="6" opacity=".7"/><rect class="metal" x="226" y="143" width="70" height="14" rx="2" opacity=".6"/><line x1="20.0" y1="150.0" x2="30.0" y2="150.0" class="sy-noz" /><line x1="30.0" y1="150.0" x2="140.0" y2="150.0" class="sy-out" /><line x1="32.0" y1="150.0" x2="138.0" y2="150.0" class="sy-in" /><line x1="140.0" y1="150.0" x2="250.0" y2="150.0" class="sy-rod" /><line x1="140.0" y1="141.0" x2="140.0" y2="159.0" class="sy-head" /><circle class="pv" cx="30.0" cy="150.0" r="4.5"/><circle class="pv" cx="250.0" cy="150.0" r="4.5"/><rect class="wood" x="250" y="138" width="22" height="24" rx="3" style="stroke:var(--wood-stroke);stroke-width:2"/><line x1="268.0" y1="142.0" x2="312.0" y2="108.0" class="link" /><line x1="268.0" y1="158.0" x2="312.0" y2="192.0" class="link" /><path class="jaw" d="M312 108 L 340 120 Q 420 112 480 140"/><path class="jaw" d="M312 192 L 340 180 Q 420 188 480 160"/><circle class="pv" cx="340" cy="120" r="5"/><circle class="pv" cx="340" cy="180" r="5"/><circle class="pv" cx="312" cy="108" r="3.5"/><circle class="pv" cx="312" cy="192" r="3.5"/><text class="t" x="110" y="190" text-anchor="middle">Seringa da garra</text><text class="t" x="261" y="250" text-anchor="middle">Peça deslizante</text><line x1="261.0" y1="240.0" x2="261.0" y2="164.0" class="leader" /><text class="ts" x="372" y="250" text-anchor="start">Pivôs (parafuso M3)</text><line x1="380.0" y1="240.0" x2="342.0" y2="184.0" class="leader" /><text class="t" x="470" y="110" text-anchor="end">Pinças</text><text class="ts" x="30" y="274" text-anchor="start">A haste empurra ou puxa a peça, e as duas hastes de</text><text class="ts" x="30" y="291" text-anchor="start">ligação abrem ou fecham as pinças ao mesmo tempo.</text></svg></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Estação de controle vista de cima</h2>
+    <div class="panel"><svg viewBox="0 0 1000 380" role="img" aria-label="Estação de controle vista de cima: ESP32, fonte e duas pontes H à esquerda, quatro motores amarelos com manivela empurrando quatro seringas mestre, e quatro mangueiras saindo para o braço."><rect class="mdf" x="20" y="20" width="960" height="340" rx="8"/><rect class="board" x="40" y="44" width="80" height="140" rx="6"/><text x="80" y="120" text-anchor="middle" style="fill:var(--board-fg);font:600 13px var(--sans)">ESP32</text><rect class="psu" x="40" y="250" width="100" height="84" rx="6"/><text class="t" x="90" y="288" text-anchor="middle">Fonte</text><text class="ts" x="90" y="306" text-anchor="middle">7–9 V</text><rect class="l298" x="150" y="44" width="70" height="120" rx="5"/><text x="185" y="110" text-anchor="middle" class="lb-t">H 1</text><rect class="l298" x="150" y="204" width="70" height="120" rx="5"/><text x="185" y="270" text-anchor="middle" class="lb-t">H 2</text><path d="M120 90 H150 M120 104 H150 M120 140 C 135 140, 135 230, 150 230 M120 154 C 140 154, 140 244, 150 244" fill="none" stroke="var(--j-or)" stroke-width="2"/><path d="M220 98 C 245 98, 245 70, 262 70" fill="none" stroke="var(--w-red)" stroke-width="2"/><rect class="tt" x="262" y="50" width="96" height="40" rx="5"/><text x="296" y="75" text-anchor="middle" class="tt-s">motor</text><line x1="340.0" y1="70.0" x2="340.0" y2="46.0" class="wo" stroke-width="10"/><line x1="340.0" y1="70.0" x2="340.0" y2="46.0" class="wi" stroke-width="7"/><circle class="shaft" cx="340" cy="70" r="7"/><line x1="340.0" y1="46.0" x2="430.0" y2="70.0" class="link" /><circle class="pv" cx="340" cy="46" r="4"/><circle class="pv" cx="430" cy="70" r="4"/><line x1="710.0" y1="70.0" x2="700.0" y2="70.0" class="sy-noz" /><line x1="700.0" y1="70.0" x2="538.0" y2="70.0" class="sy-out" /><line x1="698.0" y1="70.0" x2="540.0" y2="70.0" class="sy-in" /><line x1="538.0" y1="70.0" x2="430.0" y2="70.0" class="sy-rod" /><line x1="538.0" y1="79.0" x2="538.0" y2="61.0" class="sy-head" /><rect class="metal" x="580" y="58" width="10" height="24" rx="2"/><rect class="metal" x="664" y="58" width="10" height="24" rx="2"/><path class="tube2" d="M690 70 C 800 70, 840 70, 960 70"/><text class="ts" x="955" y="60" text-anchor="end">para a seringa da Base</text><path d="M220 110 C 245 110, 245 150, 262 150" fill="none" stroke="var(--w-red)" stroke-width="2"/><rect class="tt" x="262" y="130" width="96" height="40" rx="5"/><text x="296" y="155" text-anchor="middle" class="tt-s">motor</text><line x1="340.0" y1="150.0" x2="340.0" y2="126.0" class="wo" stroke-width="10"/><line x1="340.0" y1="150.0" x2="340.0" y2="126.0" class="wi" stroke-width="7"/><circle class="shaft" cx="340" cy="150" r="7"/><line x1="340.0" y1="126.0" x2="430.0" y2="150.0" class="link" /><circle class="pv" cx="340" cy="126" r="4"/><circle class="pv" cx="430" cy="150" r="4"/><line x1="710.0" y1="150.0" x2="700.0" y2="150.0" class="sy-noz" /><line x1="700.0" y1="150.0" x2="538.0" y2="150.0" class="sy-out" /><line x1="698.0" y1="150.0" x2="540.0" y2="150.0" class="sy-in" /><line x1="538.0" y1="150.0" x2="430.0" y2="150.0" class="sy-rod" /><line x1="538.0" y1="159.0" x2="538.0" y2="141.0" class="sy-head" /><rect class="metal" x="580" y="138" width="10" height="24" rx="2"/><rect class="metal" x="664" y="138" width="10" height="24" rx="2"/><path class="tube2" d="M690 150 C 800 150, 840 150, 960 150"/><text class="ts" x="955" y="140" text-anchor="end">para a seringa do Ombro</text><path d="M220 258 C 245 258, 245 230, 262 230" fill="none" stroke="var(--w-red)" stroke-width="2"/><rect class="tt" x="262" y="210" width="96" height="40" rx="5"/><text x="296" y="235" text-anchor="middle" class="tt-s">motor</text><line x1="340.0" y1="230.0" x2="340.0" y2="206.0" class="wo" stroke-width="10"/><line x1="340.0" y1="230.0" x2="340.0" y2="206.0" class="wi" stroke-width="7"/><circle class="shaft" cx="340" cy="230" r="7"/><line x1="340.0" y1="206.0" x2="430.0" y2="230.0" class="link" /><circle class="pv" cx="340" cy="206" r="4"/><circle class="pv" cx="430" cy="230" r="4"/><line x1="710.0" y1="230.0" x2="700.0" y2="230.0" class="sy-noz" /><line x1="700.0" y1="230.0" x2="538.0" y2="230.0" class="sy-out" /><line x1="698.0" y1="230.0" x2="540.0" y2="230.0" class="sy-in" /><line x1="538.0" y1="230.0" x2="430.0" y2="230.0" class="sy-rod" /><line x1="538.0" y1="239.0" x2="538.0" y2="221.0" class="sy-head" /><rect class="metal" x="580" y="218" width="10" height="24" rx="2"/><rect class="metal" x="664" y="218" width="10" height="24" rx="2"/><path class="tube2" d="M690 230 C 800 230, 840 230, 960 230"/><text class="ts" x="955" y="220" text-anchor="end">para a seringa do Cotovelo</text><path d="M220 270 C 245 270, 245 310, 262 310" fill="none" stroke="var(--w-red)" stroke-width="2"/><rect class="tt" x="262" y="290" width="96" height="40" rx="5"/><text x="296" y="315" text-anchor="middle" class="tt-s">motor</text><line x1="340.0" y1="310.0" x2="340.0" y2="286.0" class="wo" stroke-width="10"/><line x1="340.0" y1="310.0" x2="340.0" y2="286.0" class="wi" stroke-width="7"/><circle class="shaft" cx="340" cy="310" r="7"/><line x1="340.0" y1="286.0" x2="430.0" y2="310.0" class="link" /><circle class="pv" cx="340" cy="286" r="4"/><circle class="pv" cx="430" cy="310" r="4"/><line x1="710.0" y1="310.0" x2="700.0" y2="310.0" class="sy-noz" /><line x1="700.0" y1="310.0" x2="538.0" y2="310.0" class="sy-out" /><line x1="698.0" y1="310.0" x2="540.0" y2="310.0" class="sy-in" /><line x1="538.0" y1="310.0" x2="430.0" y2="310.0" class="sy-rod" /><line x1="538.0" y1="319.0" x2="538.0" y2="301.0" class="sy-head" /><rect class="metal" x="580" y="298" width="10" height="24" rx="2"/><rect class="metal" x="664" y="298" width="10" height="24" rx="2"/><path class="tube2" d="M690 310 C 800 310, 840 310, 960 310"/><text class="ts" x="955" y="300" text-anchor="end">para a seringa da Garra</text><text class="ts" x="310" y="40" text-anchor="middle">Motores com manivela</text><text class="ts" x="565" y="40" text-anchor="middle">Seringas mestre (presas com abraçadeira)</text></svg></div>
+    <p class="note">Tudo que é elétrico fica nesta placa, separado do braço. Só as 4 mangueiras ligam uma parte à outra, então se vazar água ela não chega na eletrônica.</p>
+  </section>
+
+  <section>
+    <h2>Material sugerido</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Peça</th><th>Quantidade</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Seringas</td><td>8</td><td>10 ml ou 20 ml. Mestre igual ou menor que a escrava</td></tr>
+          <tr><td>Mangueira de aquário ou de soro</td><td>~4 m</td><td>Que encaixe justo no bico das seringas</td></tr>
+          <tr><td>Motor amarelo TT com redução (3–6 V)</td><td>4</td><td>De preferência já com os fios soldados</td></tr>
+          <tr><td>Ponte H L298N</td><td>2</td><td>Cada uma controla 2 motores</td></tr>
+          <tr><td>Fonte 7–9 V, 2 A ou mais</td><td>1</td><td>Alimenta as pontes H e os motores</td></tr>
+          <tr><td>Protoboard e jumpers</td><td>1 + 13</td><td>8 fêmea‑fêmea, 4 macho‑macho, 1 macho‑fêmea</td></tr>
+          <tr><td>MDF 3–6 mm ou palito de picolé</td><td>—</td><td>Base, coluna, braços, pinças e manivelas</td></tr>
+          <tr><td>Rolamento de prato giratório</td><td>1</td><td>Para o disco da base girar leve</td></tr>
+          <tr><td>Parafusos M3 com porca</td><td>~24</td><td>Pivôs das juntas, das seringas e das manivelas</td></tr>
+          <tr><td>Abraçadeiras de nylon</td><td>~16</td><td>Prender as seringas mestre e as escravas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Os 4 pares</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Par</th><th>Movimento</th><th>Pinos</th><th>Onde fica a seringa escrava</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Base (giro)</td><td><code>32 · 33</code></td><td>Presa na parte fixa, empurrando um pino fora do centro do disco giratório (alavanca, 90–120° de giro)</td></tr>
+          <tr><td>2</td><td>Ombro (sobe e desce)</td><td><code>25 · 26</code></td><td>Entre a base e o primeiro segmento do braço</td></tr>
+          <tr><td>3</td><td>Cotovelo (estica e recolhe)</td><td><code>23 · 22</code></td><td>Entre o primeiro e o segundo segmento do braço</td></tr>
+          <tr><td>4</td><td>Garra (abre e fecha)</td><td><code>19 · 18</code></td><td>Na ponta, empurrando as pinças</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Os pinos estão definidos em <code>firmware/garra_esp32/config.h</code>. Se mudar um fio de lugar, mude lá também.</p>
+  </section>
+</div>
+
+</body>
+</html>

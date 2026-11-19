@@ -1,124 +1,59 @@
-# Garra hidráulica controlada pelo celular (ESP32 + motores DC)
+# Garra hidráulica controlada pelo celular
 
-Garra movida por **8 seringas com água** (4 pares mestre → escrava) e **4 motores DC**
-com **2 pontes H**, controlada pelo celular através da rede Wi-Fi criada pelo próprio ESP32.
-Não precisa de app nem de internet, e o código **não usa nenhuma biblioteca extra**.
+Braço robótico com garra movido por **8 seringas com água** e **4 motores DC**, controlado
+pelo **celular** através da rede Wi‑Fi criada por um **ESP32**. Sem internet, sem app de loja,
+sem biblioteca extra e sem emendar fios.
 
-```
-[Celular] --Wi-Fi "Garra-ESP"--> [ESP32: página web]
-                                        │ 8 fios de sinal (IN1..IN4 x2)
-                              [2 pontes H]  ← fonte externa
-                                        │
-                                  [4 motores DC]
-                                        │ empurram/puxam
-                              seringa MESTRE ──mangueira c/ água──► seringa ESCRAVA
-```
-
-## Por que ponte H?
-
-O motor DC só muda de sentido quando o + e o − dele são invertidos. A ponte H faz essa
-inversão sob comando do ESP32. Cada módulo comum (L298N, L9110S, TB6612) controla **2 motores**,
-então são necessários **2 módulos**.
-
-## Motores e pinos
-
-| Motor    | Ponte H | Entradas  | Pinos ESP32 | Botões no celular  |
-|----------|---------|-----------|-------------|--------------------|
-| Base     | 1       | IN1 / IN2 | 32 / 33     | Esquerda / Direita |
-| Ombro    | 1       | IN3 / IN4 | 25 / 26     | Desce / Sobe       |
-| Cotovelo | 2       | IN1 / IN2 | 23 / 22     | Recolhe / Estica   |
-| Garra    | 2       | IN3 / IN4 | 19 / 18     | Abre / Fecha       |
-
-Motor 1 de cada ponte nos bornes **OUT1/OUT2**, motor 2 nos bornes **OUT3/OUT4**.
-A Ponte H 1 usa pinos do lado esquerdo da placa ESP32 e a Ponte H 2 do lado direito.
-Tudo configurável no início de [`firmware/garra_esp32/garra_esp32.ino`](firmware/garra_esp32/garra_esp32.ino), na seção CONFIGURAÇÃO.
-
-## Ligação
+<p align="center">
+  <img src="docs/img/braco-vista-lateral.png" alt="Vista lateral do braço com as seringas" width="640"><br>
+  <img src="docs/img/app-celular.png" alt="App de controle no celular" width="240">
+</p>
 
 ```
- ESP32                  PONTE H 1                 PONTE H 2
- 32 ─────────────────── IN1                       
- 33 ─────────────────── IN2      OUT1/OUT2 → motor Base
- 25 ─────────────────── IN3      OUT3/OUT4 → motor Ombro
- 26 ─────────────────── IN4
- 23 ───────────────────────────────────────────── IN1
- 22 ───────────────────────────────────────────── IN2   OUT1/OUT2 → motor Cotovelo
- 19 ───────────────────────────────────────────── IN3   OUT3/OUT4 → motor Garra
- 18 ───────────────────────────────────────────── IN4
- GND ────────────────── GND ───────────────────── GND   ← OBRIGATÓRIO (GND comum)
-
- FONTE (+) ──────────── +12V/VCC ──────────────── +12V/VCC
- FONTE (−) ──────────── GND ───────────────────── GND
- ESP32 alimentado pelo USB.
+Celular → Wi-Fi → ESP32 → Ponte H → Motor DC → Manivela → Seringa mestre → água → Seringa escrava → Junta
 ```
 
-- Os pinos IN são machos: use **jumpers fêmea-fêmea** do ESP32 até a ponte H.
-- Os bornes (+12V, GND, OUT) são de parafuso: só encaixar o fio e apertar. Para levar a fonte
-  às duas pontes, use a trilha da protoboard ou coloque 2 fios no mesmo borne.
-- **L298N:** deixe os jumpers **ENA** e **ENB** no lugar. Ele "perde" uns 2 V, então para motor
-  amarelo (TT) de 3–6 V use fonte de **7–9 V**. Não ligue nada no pino "5V" dele.
-- **L9110S / TB6612:** quase não perdem tensão, use fonte de **5–6 V**.
-- Se um motor girar ao contrário do botão, inverta os 2 fios dele no borne OUT ou mude
-  `invertido` para `true` na seção CONFIGURAÇÃO do `.ino`.
+## Tutorial passo a passo
 
-## Parte mecânica: motor DC empurrando a seringa
+| # | Capítulo | O que você faz |
+|---|---|---|
+| 1 | [Materiais](tutorial/01-materiais.md) | Lista de compras completa |
+| 2 | [Preparar a Arduino IDE](tutorial/02-arduino-ide.md) | Instalar a IDE, a placa ESP32 e o driver USB |
+| 3 | [Gravar o firmware](tutorial/03-gravar-firmware.md) | Abrir, configurar e gravar o código no ESP32 |
+| 4 | [Ligação elétrica](tutorial/04-ligacao-eletrica.md) | ESP32 + 2 pontes H L298N + 4 motores + fonte |
+| 5 | [Hidráulica](tutorial/05-hidraulica.md) | Montar os pares de seringas sem bolhas |
+| 6 | [Montagem mecânica](tutorial/06-montagem-mecanica.md) | Manivelas, estação de controle, braço, base e pinça |
+| 7 | [App do celular](tutorial/07-app-celular.md) | Conectar, controlar e pôr o ícone na tela inicial |
+| 8 | [Testes e calibração](tutorial/08-testes.md) | Testar uma etapa por vez |
+| 9 | [Problemas comuns](tutorial/09-problemas.md) | Erros da IDE, do celular e da montagem |
+| 10 | [Como funciona](tutorial/10-como-funciona.md) | Explicação para relatório e apresentação |
 
-O motor precisa ter **caixa de redução** (o motor amarelo de carrinho já tem). Para transformar
-o giro em empurra/puxa:
+## Resumo rápido
 
-- **Manivela (mais simples):** um braço preso no eixo do motor e uma haste até o êmbolo.
-  Girar para um lado empurra, girar para o outro puxa. Use menos de meia volta.
-- **Barra roscada (mais força):** o motor gira uma barra roscada e uma porca presa ao êmbolo
-  anda para frente e para trás. É lenta, mas segura a posição sozinha quando o motor para.
+| Motor | Ponte H | Pinos do ESP32 | Botões no app |
+|---|---|---|---|
+| Base | 1 (IN1/IN2) | 32 · 33 | Esquerda / Direita |
+| Ombro | 1 (IN3/IN4) | 25 · 26 | Desce / Sobe |
+| Cotovelo | 2 (IN1/IN2) | 23 · 22 | Recolhe / Estica |
+| Garra | 2 (IN3/IN4) | 19 · 18 | Abre / Fecha |
 
-Em todos os casos o **êmbolo precisa estar preso** (furo + parafuso ou arame), senão ele só
-empurra e a junta não volta.
+- **Rede:** `Garra-ESP`, senha `garra1234`, endereço **http://192.168.4.1**
+- **Fonte:** 7–9 V, 2 A ou mais (o L298N perde ~2 V)
+- **Código:** um arquivo só, [`firmware/garra_esp32/garra_esp32.ino`](firmware/garra_esp32/garra_esp32.ino)
 
-## Gravando o firmware
+## Estrutura do repositório
 
-**Arduino IDE** (não precisa instalar nenhuma biblioteca)
-1. Em Preferências, adicione a URL de placas
-   `https://espressif.github.io/arduino-esp32/package_esp32_index.json`.
-2. Gerenciador de Placas → instale **esp32** (Espressif Systems).
-3. Abra `firmware/garra_esp32/garra_esp32.ino`, placa **ESP32 Dev Module**, e envie.
-
-**PlatformIO**
-```bash
-pio run -t upload && pio device monitor
+```
+├── README.md                     ← você está aqui
+├── tutorial/                     ← os 10 capítulos
+├── firmware/garra_esp32/
+│   └── garra_esp32.ino           ← código completo (configuração + app + programa)
+├── docs/
+│   ├── img/                      ← diagramas e telas do app
+│   └── diagramas.html            ← todos os diagramas numa página (abra no navegador)
+└── platformio.ini                ← opcional, para quem usa PlatformIO
 ```
 
-## Usando
+## Licença
 
-1. No celular, conecte na rede **Garra-ESP** (senha `garra1234`).
-2. Abra **http://192.168.4.1**.
-3. Para ter o app na tela do celular: no Chrome (Android), toque em **⋮ → Adicionar à tela inicial**.
-   No iPhone (Safari), toque em **Compartilhar → Adicionar à Tela de Início**. Ele abre em tela cheia.
-4. **Segure** um botão para mover o motor e **solte** para parar. Dá para segurar dois ao mesmo tempo.
-   - **PARAR TUDO**: para todos os motores na hora.
-   - **Velocidade**: força dos motores, em %.
-
-## Segurança embutida
-
-- O motor só gira enquanto o botão está apertado. Se o celular parar de mandar o comando
-  (botão solto, Wi-Fi caiu, tela bloqueada), o motor para em 0,4 s.
-- Se o botão ficar apertado por mais de 6 s seguidos, o motor para e só volta depois de soltar.
-  Isso protege o fim de curso da seringa. Ajuste `TEMPO_MAX_MS` na seção CONFIGURAÇÃO do `.ino`.
-- Partida suave (rampa), para não dar tranco na hidráulica.
-
-Como o motor DC não sabe a própria posição, **é você quem para antes do fim da seringa**.
-Para ficar automático, dá para adicionar chaves de fim de curso (microswitch) depois.
-
-## Protocolo (se quiser fazer outro controle)
-
-`GET http://192.168.4.1/cmd?c=<comandos>` (vários separados por `;`):
-
-| Comando       | Efeito                                         |
-|---------------|------------------------------------------------|
-| `m,<j>,1`     | motor `j` no sentido do botão da direita       |
-| `m,<j>,-1`    | motor `j` no sentido do botão da esquerda      |
-| `m,<j>,0`     | para o motor `j`                               |
-| `v,<30-100>`  | velocidade em %                                |
-| `x`           | PARAR tudo                                     |
-| `p`           | ping                                           |
-
-Enquanto o motor deve girar, o comando `m` precisa ser repetido a cada ~150 ms.
+Livre para copiar, modificar e usar em projetos escolares.
