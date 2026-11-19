@@ -91,7 +91,9 @@ pio run -t upload && pio device monitor
 
 1. No celular, conecte na rede **Garra-ESP** (senha `garra1234`).
 2. Abra **http://192.168.4.1**.
-3. **Segure** um botão para mover o motor e **solte** para parar. Dá para segurar dois ao mesmo tempo.
+3. Para ter o app na tela do celular: no Chrome (Android), toque em **⋮ → Adicionar à tela inicial**.
+   No iPhone (Safari), toque em **Compartilhar → Adicionar à Tela de Início**. Ele abre em tela cheia.
+4. **Segure** um botão para mover o motor e **solte** para parar. Dá para segurar dois ao mesmo tempo.
    - **PARAR TUDO**: para todos os motores na hora.
    - **Velocidade**: força dos motores, em %.
 

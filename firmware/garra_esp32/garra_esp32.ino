@@ -87,68 +87,126 @@ const char PAGINA_HTML[] PROGMEM = R"rawliteral(
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Garra Hidráulica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Garra">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg">
+<title>Garra</title>
 <style>
-  :root { --bg:#10141a; --card:#1b222c; --txt:#e8edf3; --sub:#8a96a6; --acc:#2f9bff; --red:#e5484d; --ok:#30a46c; --warn:#f5a524; }
+  :root {
+    --bg:#0d1117; --card:#161d27; --card2:#1e2734; --line:#2a3544;
+    --txt:#e9eef5; --sub:#8b98a9; --acc:#ffb020; --acc-txt:#1a1200;
+    --red:#ef4444; --ok:#22c55e; --warn:#f59e0b;
+  }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
-  body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--txt); padding:16px; }
-  header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-  h1 { font-size:20px; margin:0; }
-  #st { font-size:13px; padding:4px 10px; border-radius:99px; background:var(--red); }
-  #st.on { background:var(--ok); }
-  .card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:12px; }
-  .top { display:flex; justify-content:space-between; align-items:center; font-size:16px; margin-bottom:10px; }
-  .tag { font-size:12px; color:var(--sub); }
-  .tag.mov { color:var(--acc); } .tag.lim { color:var(--warn); }
-  .row { display:flex; gap:10px; }
-  .hold { flex:1; height:64px; border:0; border-radius:12px; background:#2a3442; color:var(--txt); font-size:17px; font-weight:600; touch-action:none; }
-  .hold.on { background:var(--acc); color:#fff; }
-  #stop { width:100%; height:60px; border:0; border-radius:14px; background:var(--red); color:#fff; font-size:20px; font-weight:800; margin-bottom:12px; }
-  input[type=range] { width:100%; height:36px; accent-color:var(--acc); }
-  small { color:var(--sub); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--bg); color:var(--txt); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+         padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+         display:flex; flex-direction:column; gap:12px; overscroll-behavior:none; }
+  header { display:flex; align-items:center; gap:10px; }
+  .logo { width:34px; height:34px; border-radius:9px; background:var(--acc); display:grid; place-items:center; flex:none; }
+  .logo svg { width:22px; height:22px; }
+  h1 { font-size:18px; margin:0; font-weight:700; letter-spacing:.01em; }
+  .st { margin-left:auto; display:flex; align-items:center; gap:7px; font-size:13px; color:var(--sub); }
+  .st i { width:9px; height:9px; border-radius:50%; background:var(--red); box-shadow:0 0 0 3px rgba(239,68,68,.18); }
+  .st.on i { background:var(--ok); box-shadow:0 0 0 3px rgba(34,197,94,.18); }
+  #stop { height:58px; border:0; border-radius:14px; background:var(--red); color:#fff; font-size:19px; font-weight:800; letter-spacing:.06em;
+          display:flex; align-items:center; justify-content:center; gap:10px; }
+  #stop:active { filter:brightness(.85); transform:scale(.99); }
+  #grid { display:grid; grid-template-columns:1fr; gap:10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px; display:flex; flex-direction:column; gap:10px; }
+  .top { display:flex; align-items:center; justify-content:space-between; }
+  .name { font-size:16px; font-weight:700; }
+  .tag { font-size:12px; color:var(--sub); padding:3px 9px; border-radius:99px; background:var(--card2); }
+  .tag.mov { color:var(--acc-txt); background:var(--acc); }
+  .tag.lim { color:#1a0f00; background:var(--warn); }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .hold { height:72px; border:1px solid var(--line); border-radius:13px; background:var(--card2); color:var(--txt);
+          font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; touch-action:none; }
+  .hold svg { width:20px; height:20px; flex:none; }
+  .hold.on { background:var(--acc); color:var(--acc-txt); border-color:var(--acc); transform:scale(.98); }
+  .vel { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px 14px; display:flex; align-items:center; gap:14px; }
+  .vel span { font-size:14px; color:var(--sub); }
+  .vel b { font-variant-numeric:tabular-nums; min-width:44px; text-align:right; }
+  input[type=range] { flex:1; height:32px; accent-color:var(--acc); }
+  .dica { text-align:center; font-size:12px; color:var(--sub); margin:0; }
+  @media (min-width:640px) { #grid { grid-template-columns:1fr 1fr; } }
+  @media (orientation:landscape) and (max-height:500px) {
+    body { gap:8px; } #stop { height:46px; } .hold { height:56px; } #grid { grid-template-columns:1fr 1fr; gap:8px; }
+    .card { padding:10px; gap:8px; } .dica { display:none; }
+  }
 </style>
 </head>
 <body>
-<header><h1>🦾 Garra Hidráulica</h1><span id="st">desconectado</span></header>
-<button id="stop">PARAR TUDO</button>
-<div id="motores"></div>
-<div class="card">
-  <div class="top"><span>Velocidade</span><b id="vv">--</b></div>
-  <input type="range" id="vel" min="30" max="100" step="5">
-  <small>Segure o botão para mover e solte para parar.</small>
+<header>
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1200" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h8M8 20v-5l5-6M13 9l4-4M17 5l3 1M17 5l-1 3"/><circle cx="8" cy="15" r="1.6" fill="#1a1200"/></svg></div>
+  <h1>Garra Hidráulica</h1>
+  <div class="st" id="st"><i></i><span>desconectado</span></div>
+</header>
+
+<button id="stop"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>PARAR TUDO</button>
+
+<div id="grid"></div>
+
+<div class="vel">
+  <span>Velocidade</span>
+  <input type="range" id="vel" min="30" max="100" step="5" aria-label="Velocidade">
+  <b id="vv">--</b>
 </div>
+<p class="dica">Segure um botão para mover e solte para parar.</p>
 
 <script>
 const $ = id => document.getElementById(id);
-let estado = null, segurando = {}, ocupado = false, fila = null;
+const ICON = {
+  l: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  r: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>'
+};
+let estado = null, segurando = {}, ocupado = false, fila = null, falhas = 0;
 
-function online(ok) { $('st').textContent = ok ? 'conectado' : 'desconectado'; $('st').classList.toggle('on', ok); }
+function online(ok) {
+  falhas = ok ? 0 : falhas + 1;
+  const on = ok || (falhas < 3 && $('st').classList.contains('on'));
+  $('st').classList.toggle('on', on);
+  $('st').querySelector('span').textContent = on ? 'conectado' : 'desconectado';
+}
+function vibrar(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
 
-// Uma requisição por vez; o comando mais novo substitui o que estava esperando
+// Uma requisição por vez; comandos que chegam enquanto isso são juntados
 function enviar(m) {
   if (ocupado) { fila = fila ? fila + ';' + m : m; return; }
   ocupado = true;
-  fetch('/cmd?c=' + encodeURIComponent(m), { cache: 'no-store' })
+  const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 1500);
+  fetch('/cmd?c=' + encodeURIComponent(m), { cache: 'no-store', signal: ctl.signal })
     .then(r => r.json()).then(s => { online(true); atualizar(s); })
     .catch(() => online(false))
-    .finally(() => { ocupado = false; if (fila) { const f = fila; fila = null; enviar(f); } });
+    .finally(() => { clearTimeout(to); ocupado = false; if (fila) { const f = fila; fila = null; enviar(f); } });
 }
 
 function montar(j) {
-  $('motores').innerHTML = j.map((x, i) => `
+  $('grid').innerHTML = j.map((x, i) => `
     <div class="card">
-      <div class="top"><span>${x.n}</span><span class="tag" id="t${i}">parado</span></div>
+      <div class="top"><span class="name">${x.n}</span><span class="tag" id="t${i}">parado</span></div>
       <div class="row">
-        <button class="hold" data-i="${i}" data-d="-1">◀ ${x.m}</button>
-        <button class="hold" data-i="${i}" data-d="1">${x.p} ▶</button>
+        <button class="hold" data-i="${i}" data-d="-1">${ICON.l}${x.m}</button>
+        <button class="hold" data-i="${i}" data-d="1">${x.p}${ICON.r}</button>
       </div>
     </div>`).join('');
   document.querySelectorAll('.hold').forEach(b => {
     const i = +b.dataset.i, d = +b.dataset.d;
-    const ini = e => { e.preventDefault(); b.setPointerCapture && b.setPointerCapture(e.pointerId);
-                       segurando[i] = d; b.classList.add('on'); enviar(`m,${i},${d}`); };
-    const fim = () => { if (segurando[i] !== d) return; delete segurando[i]; b.classList.remove('on'); enviar(`m,${i},0`); };
+    const ini = e => {
+      e.preventDefault();
+      if (b.setPointerCapture) try { b.setPointerCapture(e.pointerId); } catch (_) {}
+      segurando[i] = d; b.classList.add('on'); vibrar(12); enviar(`m,${i},${d}`);
+    };
+    const fim = () => {
+      if (segurando[i] !== d) return;
+      delete segurando[i]; b.classList.remove('on'); enviar(`m,${i},0`);
+    };
     b.addEventListener('pointerdown', ini);
     ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => b.addEventListener(ev, fim));
     b.addEventListener('contextmenu', e => e.preventDefault());
@@ -160,32 +218,39 @@ function atualizar(s) {
   estado = s;
   s.j.forEach((x, i) => {
     const t = $('t' + i);
-    if (x.t) { t.textContent = 'tempo máximo: solte o botão'; t.className = 'tag lim'; }
-    else if (x.d) { t.textContent = 'movendo: ' + (x.d > 0 ? x.p : x.m); t.className = 'tag mov'; }
+    if (x.t) { t.textContent = 'solte o botão'; t.className = 'tag lim'; }
+    else if (x.d) { t.textContent = x.d > 0 ? x.p : x.m; t.className = 'tag mov'; }
     else { t.textContent = 'parado'; t.className = 'tag'; }
   });
   if (document.activeElement !== $('vel')) $('vel').value = s.v;
   $('vv').textContent = s.v + '%';
 }
 
-$('stop').onclick = () => {
+function pararTudo() {
   Object.keys(segurando).forEach(k => delete segurando[k]);
   document.querySelectorAll('.hold.on').forEach(b => b.classList.remove('on'));
   fila = null; enviar('x');
-};
+}
+$('stop').onclick = () => { vibrar([30, 40, 30]); pararTudo(); };
 $('vel').oninput = () => { $('vv').textContent = $('vel').value + '%'; enviar('v,' + $('vel').value); };
 
-// Enquanto um botão está apertado, repete o comando (se parar de chegar, o motor para)
+// Enquanto houver botão apertado, repete o comando (se parar de chegar, o motor para)
 setInterval(() => {
   const ks = Object.keys(segurando);
   enviar(ks.length ? ks.map(i => `m,${i},${segurando[i]}`).join(';') : 'p');
 }, 150);
+document.addEventListener('visibilitychange', () => { if (document.hidden) pararTudo(); });
+window.addEventListener('blur', () => { if (Object.keys(segurando).length) pararTudo(); });
 enviar('p');
-document.addEventListener('visibilitychange', () => { if (document.hidden) $('stop').onclick(); });
 </script>
 </body>
 </html>
 )rawliteral";
+
+// Ícone e manifesto: permitem "Adicionar à tela inicial" com cara de app
+const char ICONE_SVG[] PROGMEM = R"rawliteral(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#ffb020"/><g fill="none" stroke="#1a1200" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"><path d="M110 410h170M195 410v-100l105-125M300 185l80-80M380 105l60 20M380 105l-20 60"/></g><circle cx="195" cy="310" r="30" fill="#1a1200"/></svg>)rawliteral";
+
+const char MANIFESTO_JSON[] PROGMEM = R"rawliteral({"name":"Garra Hidráulica","short_name":"Garra","start_url":"/","display":"standalone","orientation":"any","background_color":"#0d1117","theme_color":"#0d1117","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]})rawliteral";
 
 // ============================================================
 //  PROGRAMA
@@ -295,6 +360,11 @@ void setup() {
   Serial.println(WiFi.softAPIP());
 
   server.on("/", []() { server.send(200, "text/html", PAGINA_HTML); });
+  server.on("/icon.svg", []() {
+    server.sendHeader("Cache-Control", "max-age=86400");
+    server.send(200, "image/svg+xml", ICONE_SVG);
+  });
+  server.on("/manifest.json", []() { server.send(200, "application/manifest+json", MANIFESTO_JSON); });
   server.on("/cmd", []() {
     if (server.hasArg("c")) {            // vários comandos separados por ';'
       String c = server.arg("c");
