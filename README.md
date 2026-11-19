@@ -24,6 +24,27 @@ Não precisa de app nem de internet: qualquer navegador funciona.
 
 Nomes, pinos e limites ficam em [`firmware/garra_esp32/config.h`](firmware/garra_esp32/config.h).
 
+### Base giratória (junta 0)
+
+A seringa empurra em linha reta, então é preciso converter esse movimento em giro:
+
+```
+        vista de cima
+     ┌───────────────┐
+     │   ( base  )   │   seringa ESCRAVA presa na parte FIXA,
+     │   (   •   )───┼── ponta do êmbolo presa num pino
+     │   ( gira  )   │   fora do centro do disco (alavanca)
+     └───────────────┘
+```
+
+- **Alavanca (mais simples):** o êmbolo empurra um pino a uns 3–5 cm do centro.
+  Dá cerca de **90–120° de giro**. Use um pino/parafuso solto (articulado) nas duas
+  pontas da seringa, porque o ângulo muda durante o giro.
+- **Cremalheira/polia (mais giro):** o êmbolo puxa um fio enrolado numa polia
+  (ou move uma cremalheira numa engrenagem) e você ganha **até ~180°**, mas a força é menor.
+- Apoie o disco num **rolamento de mesa giratória ("lazy susan")** ou num rolamento
+  grande, para o peso do braço não travar o giro.
+
 ## Ligação elétrica
 
 ```
