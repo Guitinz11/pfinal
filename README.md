@@ -48,11 +48,34 @@ sem mudar nada no programa.
 - **Fonte:** 7–9 V, 2 A ou mais (o L298N perde ~2 V)
 - **Código:** um arquivo só, [`firmware/garra_esp32/garra_esp32.ino`](firmware/garra_esp32/garra_esp32.ino)
 
+## Painel web em Next.js
+
+O painel responsivo fica na pasta `app/` e envia os comandos ao ESP32 por um endpoint
+intermediário do Next.js. Para executar:
+
+1. Instale o Node.js 20.9 ou superior.
+2. No terminal, na pasta do projeto, execute `npm install`.
+3. Conecte o computador que executa o Next.js à rede Wi-Fi `Garra-ESP` (senha `garra1234`).
+4. Execute `npm run dev -- --hostname 0.0.0.0`.
+5. Abra no computador `http://localhost:3000`. Para abrir no celular, conecte-o também à rede
+   `Garra-ESP` e use o endereço IP local do computador na porta `3000`.
+
+No PowerShell do Windows, use `npm.cmd` no lugar de `npm` se a política de execução bloquear
+o script `npm.ps1`.
+
+Por padrão o servidor encaminha os comandos para `http://192.168.4.1`. Se o ESP32 estiver em
+outro endereço, defina `ESP32_URL` no ambiente do servidor. O computador que executa o Next.js
+precisa alcançar o ESP32 pela rede local; uma hospedagem externa não consegue acessar diretamente
+essa rede. O painel mantém os comandos enquanto um controle estiver pressionado, envia parada ao
+soltar e oferece o botão **PARAR TUDO**.
+
 ## Estrutura do repositório
 
 ```
 ├── README.md                     ← você está aqui
 ├── tutorial/                     ← teste rápido + 10 capítulos
+├── app/                          ← frontend Next.js + proxy local para o ESP32
+├── package.json                  ← dependências e comandos do painel web
 ├── firmware/garra_esp32/
 │   └── garra_esp32.ino           ← código completo (configuração + app + programa)
 ├── docs/
